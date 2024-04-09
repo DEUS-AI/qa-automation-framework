@@ -1,0 +1,8 @@
+# Ignore configuration files
+.DS_Store
+
+# Ignore configuration folders
+runtime
+
+# Ignore testing folders
+automation

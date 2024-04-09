@@ -1,0 +1,39 @@
+---
+
+- name: Replace environment variables
+  connection: ansible.netcommon.network_cli
+  gather_facts: false
+  hosts: localhost
+  vars:
+    env_files_path: "./automation/support/env/"
+    template_file: "{{ env_files_path }}"
+  vars_files:
+    - "./automation/support/config.yml"
+
+  tasks:        
+    - name: Check if specific environment template file exists
+      stat:
+        path: "{{ env_files_path }}{{ env }}.env.yml"
+      register: template_file_check
+
+    - name: If specific environment template exists, use it
+      set_fact:
+        template_file: "{{ env_files_path }}{{ env }}.env.yml"
+      when: template_file_check.stat.exists
+
+    - name: List tests and apply environment values to them
+      find:
+        paths: ./automation/acceptance
+        recurse: yes
+      register: test_files
+
+    - name: Set template file
+      include_vars: "{{ template_file }}"
+      ignore_errors: true
+
+    - name: Replace env vars from test files
+      template: 
+        src: "{{ item.path }}"
+        dest: "{{ item.path }}"
+      when: item.path.endswith('.yml')
+      loop: "{{ test_files.files }}"

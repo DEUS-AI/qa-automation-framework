@@ -1,0 +1,18 @@
+---
+- name: Replace cypress variables in YAML files
+  hosts: localhost
+  tasks:
+    - name: Loop over YAML files
+      ansible.builtin.find:
+        paths: ./automation/acceptance
+        patterns: "*.yml"
+        recurse: yes
+      register: yaml_files
+
+    - name: Replace cypress variables
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: '\$var_(\w+)'
+        replace: '${Cypress.env("\1")}'
+        backup: yes
+      with_items: "{{ yaml_files.files }}"
