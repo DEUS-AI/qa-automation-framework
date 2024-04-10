@@ -14,7 +14,7 @@ cd runtime
 
 # make cypress folder and arranje cypress basic architecture
 mkdir cypress && mv templates/cyframework/* cypress && rm -rf templates/cyframework && mv cypress/cypress.config.js ./
-mv automation/support/files/* cypress/fixtures
+[ -d "automation/support/files" ] && mv automation/support/files/* cypress/fixtures
 
 
 # Default values
@@ -73,9 +73,9 @@ done
 
 # replace yml environment variables
 if [[ -n "$CONFIG_OPTIONS" ]]; then 
-    ansible-playbook repalceEnvVars.yml --extra-vars "$CONFIG_OPTIONS"
+    ansible-playbook replaceEnvVars.yml --extra-vars "$CONFIG_OPTIONS"
 else
-    ansible-playbook repalceEnvVars.yml
+    ansible-playbook replaceEnvVars.yml
 fi
 
 # replace cypress variables
