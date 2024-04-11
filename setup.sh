@@ -26,14 +26,21 @@ CONFIG_OPTIONS=""
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -h|--help)
-            echo "Usage: $0 [OPTIONS]"
+            echo "Usage: docker run -t -v \$PWD/automation:/app/automation --rm ghcr.io/deus-ai/qa-automation-framework:latest [OPTIONS]"
             echo "Options:"
             echo "  -h, --help          Show this help message"
-            echo "  -a, --acceptance    Specify the acceptance files to run. Multiple files should be seperated with comma and to run all tests within a folder use glob (**, *)"
-            echo "  -b, --browser       Specify the browser to use (e.g., chrome, firefox)" #TODO - right now only accepts electron due to the dockerfile base img (need to check)
+            echo "  -a, --acceptance    Specify the acceptance file(s) to run."
+            echo "                        - Multiple files should be seperated with comma;"
+            echo "                        - To run all tests within a folder use glob (**, *), e.g -a automation/acceptance/regression/**"
+            echo "  -b, --browser       Specify the browser to use (e.g. electon, chrome, firefox) for web test cases"
+            echo "                        - Default is set to electon;" #TODO - right now only accepts electron due to the dockerfile base img (need to check)
             echo "  -c, --config        Specify custom option(s) to change on the config file"
+            echo "                        - If no option specified and a config file exists,"
+            echo "                          then the test execution will pick values from the file;"
+            echo "                        - Provided parameters should be key-value pairs, e.g. env:dev"
             echo "  -e, --env           Specify cypress environment variables"
-            echo "  -t, --tags          Specify the test suite or test tags to be executed. By default is none, so all tests within the project will be executed"
+            echo "  -t, --tags          Specify the test suite or test tags to be executed." 
+            echo "                        - Default is none, so all tests within the project will be executed"
             exit 0
             ;;
         -a|--acceptance)
