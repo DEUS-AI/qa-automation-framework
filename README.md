@@ -1,4 +1,4 @@
-# automation-framework
+# QA Automation Framework
 This is a low-code test automation framework with which users can write test automation on yaml files without the need of having technical knowledge. 
 
 <br>
@@ -41,15 +41,19 @@ Use the folling command to run the automation tests:
 
 <br>
 
-The [OPTIONS] can be replaced with one or more of the following arguments to define some execution parameters:
-- -h or --help
-    - will not run anything but provide the usage method of this command.
-- -b or --browser
-    - Specifies the browser where web test cases should run. Default is electon (cypress default browser)
-- ... TBD ...
+The ```[OPTIONS]``` can be replaced with one or more parameters to define some execution parameters. For detailed information on which parameters can be used, type ```-h``` or ```--help```.
 
 <br>
 
-> Note: in order to use this image and run tests, the user needs to have access to DEUS-AI org on github.
-
-
+> Notes: 
+> <br>- In order to use this image and run tests, the user needs to have access to DEUS-AI org on github.
+> <br>- Each time a new image version is up, it is recomended to delete the local image. 
+> <br>- In case, while running the command, the following error happens:
+> <br>
+> <br>```docker: Error response from daemon: Head "https://ghcr.io/v2/deus-ai/qa-automation-framework/manifests/latest": unauthorized.```
+> <br>``` See 'docker run --help'. ``` 
+> <br>
+> <br>Do a registry login with the bellow command and then try again.
+> <br>
+> <br>```docker login --username <your_username> --password <personal_access_token> ghcr.io/deus-ai```
+> <br> 
