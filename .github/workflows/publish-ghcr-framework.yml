@@ -1,7 +1,7 @@
 name: QA Automation Framework Docker Image CI for GHCR
 
 on:
-  push
+  workflow_dispatch: # push
 
 jobs:
   build_and_publish:
