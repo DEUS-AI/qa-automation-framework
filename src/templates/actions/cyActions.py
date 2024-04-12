@@ -68,7 +68,7 @@ def template_actions():
         """
         .then(() => {
             cy.get('@{{ alias }}').then(response => {
-                expect(JSON.stringify(response.body)).to.include('{{ value }}') 
+                expect(JSON.stringify(response.body)).to.include(`{{ value }}`) 
             })
         })
         """,
@@ -76,28 +76,28 @@ def template_actions():
         "assertResponseBodyHasProperty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('body').should('have.property', '{{ property }}')
+            cy.get('@{{ alias }}').its('body').should('have.property', `{{ property }}`)
         })
         """,
 
         "assertResponseBodyPropertyHasValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('body').should('have.property', '{{ property }}', '{{ value }}')
+            cy.get('@{{ alias }}').its('body').should('have.property', `{{ property }}`, `{{ value }}`)
         })
         """,
 
         "assertResponseBodyHasNestedProperty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('body').should('have.nested.property', '{{ nestedProperty }}')
+            cy.get('@{{ alias }}').its('body').should('have.nested.property', `{{ nestedProperty }}`)
         })
         """,
 
         "assertResponseBodyNestedPropertyHasValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('body').should('have.nested.property', '{{ nestedProperty }}', '{{ value }}')
+            cy.get('@{{ alias }}').its('body').should('have.nested.property', `{{ nestedProperty }}`, `{{ value }}`)
         })
         """,
 
@@ -105,7 +105,7 @@ def template_actions():
         """
         .then(() => {
             cy.get('@{{ alias }}').then(response => {
-                expect(JSON.stringify(response.headers)).to.include('{{ value }}') 
+                expect(JSON.stringify(response.headers)).to.include(`{{ value }}`) 
             })
         })
         """,
@@ -113,14 +113,14 @@ def template_actions():
         "assertResponseHeadersHasProperty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('headers').should('have.property', '{{ property }}')
+            cy.get('@{{ alias }}').its('headers').should('have.property', `{{ property }}`)
         })
         """,
 
         "assertResponseHeadersPropertyHasValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('headers').should('have.property', '{{ property }}', '{{ value }}')
+            cy.get('@{{ alias }}').its('headers').should('have.property', `{{ property }}`, `{{ value }}`)
         })
         """,
 
