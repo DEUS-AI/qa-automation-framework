@@ -324,6 +324,13 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def scrollIntoView(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"]
+        ) + "\n"
+
+    @staticmethod
     def type(template, args):
         return template.render(
             locator_type=args["element"]["type"],
