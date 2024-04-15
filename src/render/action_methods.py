@@ -62,12 +62,26 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def reload(template):
+        return template.render() + "\n"
+
+    @staticmethod
     def stubResponse(template, args):
         return template.render(
             method=args["method"],
             url=args["url"],
             status_code=args["statusCode"],
-            body=args["body"],  # maybe add dict(args["body"]) so it encapsulates input into json obj
+            body=args["body"],
+            alias=args["alias"]
+        ) + "\n"
+
+    @staticmethod
+    def stubResponseFromFile(template, args):
+        return template.render(
+            method=args["method"],
+            url=args["url"],
+            status_code=args["statusCode"],
+            file=args["file"],
             alias=args["alias"]
         ) + "\n"
 
@@ -335,7 +349,8 @@ class ActionMethods:
         return template.render(
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
-            value=args["value"]
+            value=args["value"],
+            log=args["log"] if args.get("log") else "true"
         ) + "\n"
 
     @staticmethod

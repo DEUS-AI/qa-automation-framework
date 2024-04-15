@@ -9,8 +9,10 @@ def template_actions():
         "cyLog": ".then(() => {cy.log(`{{ value }}`)})",
         # "command": "cy.{{ command_name }}({{ args }})",
         "interceptRequest": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}).as('{{ alias }}')})",
+        "reload": ".then(() => {cy.reload()})",
         "setVariable": ".then(() => {Cypress.env('{{ cy_var }}', `{{ value }}`)})",
         "stubResponse": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, body: {{ body }} }).as('{{ alias }}')})",
+        "stubResponseFromFile": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, fixture: `{{ file }}` }).as('{{ alias }}')})",
         "takeScreenshot": ".then(() => {cy.screenshot(`{{filename}}`)})",
         "wait": ".then(() => {cy.wait({{ value }})})",
     }
@@ -50,7 +52,7 @@ def template_actions():
         "selectByValue": ".then(() => {cy.{{ locator_type }}('{{ locator }}').select('{{ value }}')})",
         "setElementTextAsVariable": ".then(() => {cy.{{ locator_type }}('{{ locator }}').then($el => {Cypress.env('{{ cy_var }}', $el.text())})})",
         "scrollIntoView": ".then(() => {cy.{{ locator_type }}('{{ locator }}').scrollIntoView()})",
-        "type": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').type(`{{ value }}`)})",
+        "type": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').type(`{{ value }}`, { log: {{ log }} })})",
         "typeAndPressEnter": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').type(`{{ value }}{enter}`)})",
     }
 
