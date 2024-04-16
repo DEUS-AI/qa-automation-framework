@@ -7,7 +7,7 @@ def template_actions():
         "assertVariableEquals": ".then(() => {expect(`{{ cy_var }}`).to.eq(`{{ value }}`)})",
         "catchExceptions": ".then(() => {Cypress.on('uncaught:exception', (err, runnable) => {return false})})",
         "cyLog": ".then(() => {cy.log(`{{ value }}`)})",
-        # "command": "cy.{{ command_name }}({{ args }})",
+        "command": ".then(() => {cy.{{ name }}({{ params }})})",
         "interceptRequest": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}).as('{{ alias }}')})",
         "reload": ".then(() => {cy.reload()})",
         "setVariable": ".then(() => {Cypress.env('{{ cy_var }}', `{{ value }}`)})",
@@ -15,6 +15,19 @@ def template_actions():
         "stubResponseFromFile": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, fixture: `{{ file }}` }).as('{{ alias }}')})",
         "takeScreenshot": ".then(() => {cy.screenshot(`{{filename}}`)})",
         "wait": ".then(() => {cy.wait({{ value }})})",
+        "session": """
+            .then(() => {
+                cy.session(`{{ name }}`, () => {
+                    {{ actions }}
+                }, {
+                    validate() {
+                        {{ validate }}
+                        }
+                }, {
+                    cacheAcrossSpecs: {{ cache }}
+                }
+            )
+        })"""
     }
 
     web = {

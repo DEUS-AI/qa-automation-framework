@@ -5,7 +5,7 @@ import utils.logs as logs
 
 acceptance_files = preprocessor.get_all_acceptance_files()
 
-# import_all_commands_files()
+preprocessor.process_and_import_all_commands_files()
 
 ### render cypress tests
 for acceptance_file in acceptance_files:

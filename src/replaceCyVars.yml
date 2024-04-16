@@ -1,18 +1,23 @@
 ---
-- name: Replace cypress variables in YAML files
+- name: Replace test variables in yml files
   hosts: localhost
+  vars:
+    acceptance_path: "./automation/acceptance"
+    commands_path: "./automation/support/commands"
   tasks:
-    - name: Loop over YAML files
+    - name: Loop over acceptance and commands yml files
       ansible.builtin.find:
-        paths: ./automation/acceptance
+        paths: "{{ item }}"
         patterns: "*.yml"
         recurse: yes
-      register: yaml_files
+      register: yml_files
+      loop:
+        - "{{ acceptance_path }}"
+        - "{{ commands_path }}"
 
-    - name: Replace cypress variables
+    - name: Replace test variables on acceptance and command yml files
       ansible.builtin.replace:
         path: "{{ item.path }}"
         regexp: '\$var_(\w+)'
         replace: '${Cypress.env("\1")}'
-        backup: yes
-      with_items: "{{ yaml_files.files }}"
+      with_items: "{{ yml_files.results | map(attribute='files') | list }}"

@@ -81,19 +81,61 @@ def create_cy_test(acc_filename: str):
     
     return file_path
 
-def import_all_commands_files():
+def process_and_import_all_commands_files():
     '''
-    Checks the existence of js files in support/commands and, for each file found, add an import statement in the cypress/support/e2e,js file
+    Checks the existence of js files in support/commands and, for each file found:
+    
+    - if file is .js -> add an import statement in the cypress/support/e2e.js
+
+    - if file is .yml -> process the file and add an import statement in the cypress/support/e2e.js
     '''
+
+    commands_path = "automation/support/commands"
+    
     try:
-        if len(list(Path("../support/commands").glob("*.js"))) > 0:
-            for f in list(Path("../support/commands").glob("*.js")):
-                fname = str(f).split("support/commands/")[1]
-                with open("cypress/support/e2e.js", mode="a", encoding="utf-8") as message:
-                    message.write(f"\nimport './commands/{fname}'")
-                    message.close()
+        if len(list(Path(f"../{commands_path}").glob("*.js"))) > 0:
+            write_import_statement_for_js_command_files(commands_path)
+        if len(list(Path(f"./{commands_path}").glob("*.yml"))) > 0:
+            process_and_write_import_statement_for_yml_command_files(commands_path)
     except:
         print("No command files found.")
+
+def write_import_statement_for_js_command_files(commands_path):
+    for f in list(Path(f"../{commands_path}").glob("*.js")):
+        fname = str(f).split("support/commands/")[1]
+
+        with open("cypress/support/e2e.js", mode="a", encoding="utf-8") as message:
+            message.write(f"\nimport './commands/{fname}'")
+            message.close()
+
+def process_and_write_import_statement_for_yml_command_files(commands_path):
+    from parse.actions import parser
+
+    template = """
+    Cypress.Commands.add('<<name>>', (<<params>>) => {
+        <<actions>>
+    })"""
+
+    for f in list(Path(f"./{commands_path}").glob("*.yml")):
+        fname = str(f).split("support/commands/")[1]
+        with open(f, 'r') as stream:
+            fname = fname.replace(".yml",".js")
+            data = yaml.safe_load(stream)
+
+            for command in data:
+
+                with open(f"./{commands_path}/{fname}", "a", encoding="utf-8") as nf:
+                        params = ','.join(data[command].get("parameters")) if data[command].get("parameters") is not None else ""
+
+                        nf.write(template
+                            .replace("<<name>>", command)
+                            .replace("<<params>>", params)
+                            .replace("<<actions>>", parser(data[command].get("actions")))
+                        )
+            
+            with open("cypress/support/e2e.js", mode="a", encoding="utf-8") as message:
+                message.write(f"\n\nimport './commands/{fname}'")
+                message.close()
 
 if __name__ == "__main__":
     pass

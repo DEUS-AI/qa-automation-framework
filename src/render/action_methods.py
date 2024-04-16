@@ -9,6 +9,24 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def session(template, args):
+        from parse.actions import parser
+
+        return template.render(
+            name=args["name"],
+            actions=parser(args["actions"]) if args.get("actions") else "",
+            validate=parser(args["validate"]) if args.get("validate") else "",
+            cache=args["cache"] if args.get("cache") else "true"
+        ) + "\n"
+
+    @staticmethod
+    def command(template, args):
+        return template.render(
+            name=args["name"],
+            params=", ".join(['"{}"'.format(item) for item in args["parameters"]]) if args.get("parameters") else "",
+        ) + "\n"
+
+    @staticmethod
     def assertStubResponseBodyContains(template, args):
         return template.render(
             alias=args["alias"],

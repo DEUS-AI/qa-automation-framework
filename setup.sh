@@ -90,7 +90,7 @@ ansible-playbook replaceCyVars.yml
 
 # run main source code file to transform all codeless automation into js cypress
 # finish arranje the cypress architecture
-python3 main.py && mv cy_tests/* cypress/acceptance && rm -R cy_tests
+python3 main.py && mv cy_tests/* cypress/acceptance && rm -R cy_tests && cp -R automation/support/commands/*.js cypress/support/commands
 
 
 # run tests

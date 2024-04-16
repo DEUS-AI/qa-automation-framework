@@ -1,39 +1,39 @@
 ---
-
-- name: Replace environment variables
+- name: Replace environment variables in yml files
   connection: ansible.netcommon.network_cli
   gather_facts: false
   hosts: localhost
   vars:
     env_files_path: "./automation/support/env/"
-    template_file: "{{ env_files_path }}"
+    template_file: "{{ env_files_path }}{{ env }}.env.yml"
+    acceptance_path: "./automation/acceptance"
+    commands_path: "./automation/support/commands"
   vars_files:
     - "./automation/support/config.yml"
 
   tasks:        
     - name: Check if specific environment template file exists
       stat:
-        path: "{{ env_files_path }}{{ env }}.env.yml"
+        path: "{{ template_file }}"
       register: template_file_check
 
-    - name: If specific environment template exists, use it
-      set_fact:
-        template_file: "{{ env_files_path }}{{ env }}.env.yml"
-      when: template_file_check.stat.exists
-
-    - name: List tests and apply environment values to them
-      find:
-        paths: ./automation/acceptance
-        recurse: yes
-      register: test_files
-
-    - name: Set template file
+    - name: Set template file if exists
       include_vars: "{{ template_file }}"
+      when: template_file_check.stat.exists
       ignore_errors: true
+    
+    - name: List tests and commands yml files
+      find:
+        paths: "{{ item }}"
+        recurse: yes
+      register: yml_files
+      loop:
+        - "{{ acceptance_path }}"
+        - "{{ commands_path }}"
 
-    - name: Replace env vars from test files
+    - name: Replace env vars from tests and commands yml files
       template: 
         src: "{{ item.path }}"
         dest: "{{ item.path }}"
-      when: item.path.endswith('.yml')
-      loop: "{{ test_files.files }}"
+      with_items: "{{ yml_files.results | map(attribute='files') | list }}"
+      when: item.path.endswith('.yml') and template_file_check.stat.exists
