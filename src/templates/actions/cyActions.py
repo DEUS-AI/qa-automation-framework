@@ -9,12 +9,8 @@ def template_actions():
         "cyLog": ".then(() => {cy.log(`{{ value }}`)})",
         "command": ".then(() => {cy.{{ name }}({{ params }})})",
         "interceptRequest": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}).as('{{ alias }}')})",
+        "script": ".then(() => { {{ js }} })",
         "reload": ".then(() => {cy.reload()})",
-        "setVariable": ".then(() => {Cypress.env('{{ cy_var }}', `{{ value }}`)})",
-        "stubResponse": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, body: {{ body }} }).as('{{ alias }}')})",
-        "stubResponseFromFile": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, fixture: `{{ file }}` }).as('{{ alias }}')})",
-        "takeScreenshot": ".then(() => {cy.screenshot(`{{filename}}`)})",
-        "wait": ".then(() => {cy.wait({{ value }})})",
         "session": """
             .then(() => {
                 cy.session(`{{ name }}`, () => {
@@ -27,7 +23,12 @@ def template_actions():
                     cacheAcrossSpecs: {{ cache }}
                 }
             )
-        })"""
+        })""",
+        "setVariable": ".then(() => {Cypress.env('{{ cy_var }}', `{{ value }}`)})",
+        "stubResponse": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, body: {{ body }} }).as('{{ alias }}')})",
+        "stubResponseFromFile": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, fixture: `{{ file }}` }).as('{{ alias }}')})",
+        "takeScreenshot": ".then(() => {cy.screenshot(`{{filename}}`)})",
+        "wait": ".then(() => {cy.wait({{ value }})})"
     }
 
     web = {
@@ -44,8 +45,12 @@ def template_actions():
         "assertElementContainsText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('include.text', `{{ value }}`)})",
         "assertElementIndexContainsText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').eq({{ index }}).should('include.text', `{{ value }}`)})",
         "assertElementHasAttribute": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.attr', `{{ attr }}`)})",
+        "assertElementIndexHasAttribute": ".then(() => {cy.{{ locator_type }}('{{ locator }}').eq({{ index }}).should('have.attr', `{{ attr }}`)})",
         "assertElementAttributeHasValue": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.attr', `{{ attr }}`, `{{ value }}`)})",
+        "assertElementIndexAttributeHasValue": ".then(() => {cy.{{ locator_type }}('{{ locator }}').eq({{ index }}).should('have.attr', `{{ attr }}`, `{{ value }}`)})",
         "assertElementAttributeContainsValue": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.attr', `{{ attr }}`).then(attr => {expect(attr).to.include(`{{ value }}`)})})",
+        "assertElementIndexAttributeContainsValue": ".then(() => {cy.{{ locator_type }}('{{ locator }}').eq({{ index }}).should('have.attr', `{{ attr }}`).then(attr => {expect(attr).to.include(`{{ value }}`)})})",
+        "assertElementLength": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.length', `{{ value }}`)})",
         "assertFileContentContainsText": ".then(() => {cy.fixture(`{{ file }}`).then(cont => {expect(JSON.stringify(cont)).to.contain(`{{ value }}`) })})",
         "assertFileContentContainsElementText": ".then(() => {cy.fixture(`{{ file }}`).then(cont => { cy.{{ locator_type }}('{{ locator }}').then($el => { expect(JSON.stringify(cont)).to.contain($el.text()) }) })})",
         "assertFileContentEqualsTextElement": ".then(() => {cy.fixture(`{{ file }}`).then(cont => {cy.{{ locator_type }}('{{ locator }}').should('have.text', cont)})})",
@@ -54,7 +59,6 @@ def template_actions():
         "click": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').click()})",
         "clickByIndex": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').eq({{ index }}).click()})",
         "forceClick": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').click({force: true})})",
-        "jsScript": ".then(() => {{{ script }}})",
         "navigateTo": ".then(() => {cy.visit(`{{ url }}`)})",
         "navigateForward": ".then(() => {cy.go('forward')})",
         "navigateBack": ".then(() => {cy.go('back')})",
@@ -63,6 +67,7 @@ def template_actions():
         "selectByIndex": ".then(() => {cy.{{ locator_type }}('{{ locator }}').select({{ index }})})",
         "selectByText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').select('{{ text }}')})",
         "selectByValue": ".then(() => {cy.{{ locator_type }}('{{ locator }}').select('{{ value }}')})",
+        "setElementLengthAsVariable": ".then(() => {cy.{{ locator_type }}('{{ locator }}').then($el => {Cypress.env('{{ cy_var }}', $el.length)})})",
         "setElementTextAsVariable": ".then(() => {cy.{{ locator_type }}('{{ locator }}').then($el => {Cypress.env('{{ cy_var }}', $el.text())})})",
         "scrollIntoView": ".then(() => {cy.{{ locator_type }}('{{ locator }}').scrollIntoView()})",
         "type": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').type(`{{ value }}`, { log: {{ log }} })})",

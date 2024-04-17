@@ -9,24 +9,6 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
-    def session(template, args):
-        from parse.actions import parser
-
-        return template.render(
-            name=args["name"],
-            actions=parser(args["actions"]) if args.get("actions") else "",
-            validate=parser(args["validate"]) if args.get("validate") else "",
-            cache=args["cache"] if args.get("cache") else "true"
-        ) + "\n"
-
-    @staticmethod
-    def command(template, args):
-        return template.render(
-            name=args["name"],
-            params=", ".join(['"{}"'.format(item) for item in args["parameters"]]) if args.get("parameters") else "",
-        ) + "\n"
-
-    @staticmethod
     def assertStubResponseBodyContains(template, args):
         return template.render(
             alias=args["alias"],
@@ -65,11 +47,24 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def command(template, args):
+        return template.render(
+            name=args["name"],
+            params=", ".join(['"{}"'.format(item) for item in args["parameters"]]) if args.get("parameters") else "",
+        ) + "\n"
+
+    @staticmethod
     def interceptRequest(template, args):
         return template.render(
             method=args["method"],
             url=args["url"],
             alias=args["alias"]
+        ) + "\n"
+
+    @staticmethod
+    def script(template, args):
+        return template.render(
+            js=args["js"]
         ) + "\n"
 
     @staticmethod
@@ -82,6 +77,17 @@ class ActionMethods:
     @staticmethod
     def reload(template):
         return template.render() + "\n"
+
+    @staticmethod
+    def session(template, args):
+        from parse.actions import parser
+
+        return template.render(
+            name=args["name"],
+            actions=parser(args["actions"]) if args.get("actions") else "",
+            validate=parser(args["validate"]) if args.get("validate") else "",
+            cache=args["cache"] if args.get("cache") else "true"
+        ) + "\n"
 
     @staticmethod
     def stubResponse(template, args):
@@ -211,10 +217,29 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def assertElementIndexHasAttribute(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            index=args["index"],
+            attr=args["attribute"]
+        ) + "\n"
+
+    @staticmethod
     def assertElementAttributeHasValue(template, args):
         return template.render(
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
+            attr=args["attribute"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementIndexAttributeHasValue(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            index=args["index"],
             attr=args["attribute"],
             value=args["value"]
         ) + "\n"
@@ -225,6 +250,24 @@ class ActionMethods:
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
             attr=args["attribute"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementIndexAttributeContainsValue(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            index=args["index"],
+            attr=args["attribute"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementLength(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
             value=args["value"]
         ) + "\n"
 
@@ -289,12 +332,6 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
-    def jsScript(template, args):
-        return template.render(
-            script=args["script"]
-        ) + "\n"
-
-    @staticmethod
     def navigateTo(template, args):
         return template.render(
             url=args["url"]
@@ -345,6 +382,14 @@ class ActionMethods:
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
             value=args["value"]
+        ) + "\n"
+    
+    @staticmethod
+    def setElementLengthAsVariable(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            cy_var=args["name"]
         ) + "\n"
 
     @staticmethod
