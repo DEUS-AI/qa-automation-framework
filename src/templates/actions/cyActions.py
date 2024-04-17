@@ -50,7 +50,7 @@ def template_actions():
         "assertElementIndexAttributeHasValue": ".then(() => {cy.{{ locator_type }}('{{ locator }}').eq({{ index }}).should('have.attr', `{{ attr }}`, `{{ value }}`)})",
         "assertElementAttributeContainsValue": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.attr', `{{ attr }}`).then(attr => {expect(attr).to.include(`{{ value }}`)})})",
         "assertElementIndexAttributeContainsValue": ".then(() => {cy.{{ locator_type }}('{{ locator }}').eq({{ index }}).should('have.attr', `{{ attr }}`).then(attr => {expect(attr).to.include(`{{ value }}`)})})",
-        "assertElementLength": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.length', `{{ value }}`)})",
+        "assertElementLength": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.length{{ option }}', {{ value }})})",
         "assertFileContentContainsText": ".then(() => {cy.fixture(`{{ file }}`).then(cont => {expect(JSON.stringify(cont)).to.contain(`{{ value }}`) })})",
         "assertFileContentContainsElementText": ".then(() => {cy.fixture(`{{ file }}`).then(cont => { cy.{{ locator_type }}('{{ locator }}').then($el => { expect(JSON.stringify(cont)).to.contain($el.text()) }) })})",
         "assertFileContentEqualsTextElement": ".then(() => {cy.fixture(`{{ file }}`).then(cont => {cy.{{ locator_type }}('{{ locator }}').should('have.text', cont)})})",

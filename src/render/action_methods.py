@@ -268,7 +268,8 @@ class ActionMethods:
         return template.render(
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
-            value=args["value"]
+            option=f".{args['option']}" if args.get("option") else "",
+            value=int(args["value"])
         ) + "\n"
 
     @staticmethod
