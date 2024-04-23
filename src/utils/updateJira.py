@@ -6,7 +6,8 @@ from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from jira import JIRA
 from jinja2 import Environment, FileSystemLoader
-
+import os 
+import requests
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
@@ -41,6 +42,10 @@ def merge_report_json_files(final_json):
             test_set_duration = ts["results"][0]["suites"][0]["duration"]
             test_set_stats = ts["stats"]
             test_cases = ts["results"][0]["suites"][0]["tests"]
+            test_cases_passed = ts["results"][0]["suites"][0]["passes"]
+            test_cases_failed = ts["results"][0]["suites"][0]["failures"]
+            test_cases_pending = ts["results"][0]["suites"][0]["pending"]
+            test_cases_skipped = ts["results"][0]["suites"][0]["skipped"]
 
             test_set_data = {
                 "file": test_set_file,
@@ -53,7 +58,11 @@ def merge_report_json_files(final_json):
                     "skipped": test_set_stats.get("skipped", 0)
                 },
                 "tags": [],
-                "TestCases": []
+                "TestCases": [],
+                "passes": test_cases_passed,
+                "failures": test_cases_failed,
+                "pending": test_cases_pending,
+                "skipped": test_cases_skipped
             }
 
             for tc in test_cases:
@@ -62,17 +71,22 @@ def merge_report_json_files(final_json):
                 state = tc["state"]
                 errmsg = tc["err"].get("message")
                 errdiff = tc["err"].get("diff") 
+                context = tc["context"]
+                uuid = tc["uuid"]
 
                 test_case_data = {
                     "title": title,
                     "duration": duration,
                     "state": state,
-                    "err": {"message": errmsg, "diff": errdiff}
+                    "err": {"message": errmsg, "diff": errdiff},
+                    "context": context,
+                    "uuid": uuid
                 }
                 
                 test_set_data["TestCases"].append(test_case_data)
             
             final_json_enhanced.append({"TestSet": test_set_data})
+        
         except Exception as e:
             logger.error(f"Error processing test set: {e}")
 
@@ -81,6 +95,7 @@ def merge_report_json_files(final_json):
 def enhance_final_report(report):
     for test_set in report:
         try:
+            # Add tags to test sets and test cases
             with open(test_set["TestSet"]["file"], 'r') as stream:
                 data = yaml.safe_load(stream)
             
@@ -90,15 +105,37 @@ def enhance_final_report(report):
                 for tc in data["TestCases"]:
                     if tc["Title"] == test_case['title']:
                         if tc.get('Tags') is not None: 
-                            test_case['tags'] = tc['Tags'] 
-        
+                            test_case['tags'] = tc['Tags']
+
+            [map_tc_uuid_with_tag(test_set, state) for state in ["passes", "failures", "pending", "skipped"]]
+
         except Exception as e:
             logger.error(f"Error enhancing final report: {e}")
     
     return report
 
+def map_tc_uuid_with_tag(test_set, state = "passes"):
+
+    test_cases = test_set["TestSet"]["TestCases"]
+    state_chosen = test_set["TestSet"][state]
+
+    # Replace tc uuid on test set state fields with jira issue (test case) id (tag) 
+    for tc_uuid in state_chosen:
+        for test_case in test_cases:
+            if test_case["uuid"] == tc_uuid:
+                for tag in test_case["tags"].split():
+                    if tag.startswith(f"{JIRA_PROJECT_NAME}-"):
+                        state_chosen[state_chosen.index(tc_uuid)] = tag
+                        break  # Stop searching for tags
+                break  # Stop searching for test cases
+
 def set_ts_info(test_set, jira_fields):
     overall_status = "❌ Failed" if test_set['suiteState']['failures'] != 0 else "✅ Success"
+
+    passed_issues = f"Passed Test Cases:\n{f'{chr(10)}'.join(test_set['passes'])}" if test_set['passes'] else ""
+    failed_issues = f"Failed Test Cases:\n{f'{chr(10)}'.join(test_set['failures'])}" if test_set['failures'] else ""
+    pending_issues = f"Pending Test Cases:\n{f'{chr(10)}'.join(test_set['pending'])}" if test_set['pending'] else ""
+    skipped_issues = f"Skipped Test Cases:\n{f'{chr(10)}'.join(test_set['skipped'])}" if test_set['skipped'] else ""
 
     ts_info = {
         f"{jira_fields['overall_info']['fld_id']}": f"""
@@ -109,6 +146,14 @@ def set_ts_info(test_set, jira_fields):
         Test Cases Status:
         |✅ Passed|❌ Failed|🕖 Pending|➰Skipped|
         |{test_set['suiteState']['passes']}|{test_set['suiteState']['failures']}|{test_set['suiteState']['pending']}|{test_set['suiteState']['skipped']}|
+        
+        {passed_issues}
+
+        {failed_issues}
+
+        {pending_issues}
+
+        {skipped_issues}
         """
     }
     return ts_info
@@ -122,25 +167,69 @@ def set_tc_info(test_case, jira_fields):
         "unknown": ("🤷 unknown", f"{jira_fields['test_case_status']['options_id']['not_tested']}")
     }
 
-    status = status_map.get(test_case["state"], ("🤷 unknown", "10313"))
+    status = status_map.get(test_case["state"], ("🤷 unknown", f"{jira_fields['test_case_status']['options_id']['not_tested']}"))
 
-    testcase_final_msg = f"""
+    overall_info = f"""
     |Status|Execution Time|
     |{status[0]}|{test_case['duration']}|
     """
 
-    error_msg = test_case['err'].get('message', '-')
-    diff_msg = test_case['err'].get('diff', '')
+    delete_jira_issue_attachments(test_case['tags'])
 
-    if error_msg != "-":
-        testcase_final_msg += f"\nh4.Error Details:\n{error_msg}\n{diff_msg}"
+    if test_case['err'].get('message') is not None:
+
+        if test_case['err'].get('diff') is not None:
+            overall_info += f"""
+                h4.Error Details:
+                {test_case['err'].get('message')}
+                {test_case['err'].get('diff')}
+            """
+            add_failures_evidences_as_attachments(test_case['tags'], test_case['context'])
+            
+        else:
+            overall_info += f"""
+                h4.Error Details:
+                {test_case['err'].get('message')}
+            """
+            add_failures_evidences_as_attachments(test_case['tags'], test_case['context'])
 
     tc_info = {
-        f"{jira_fields['overall_info']['fld_id']}": testcase_final_msg,
+        f"{jira_fields['overall_info']['fld_id']}": overall_info,
         f"{jira_fields['test_case_status']['fld_id']}": {"id": status[1]}
     }
 
     return tc_info
+
+def delete_jira_issue_attachments(tc_tags):
+    try:
+        for tag in tc_tags.split():
+            if tag.startswith(f"{JIRA_PROJECT_NAME}-"):
+                url = f"{JIRA_SERVER}/rest/api/3/issue/{tag}/attachments" 
+                auth  = requests.auth.HTTPBasicAuth(JIRA_USERNAME,JIRA_PASSWORD)
+                headers = { 'X-Atlassian-Token': 'nocheck' }
+                requests.delete(url, auth=auth, headers=headers)
+    except Exception as e:
+            logger.error(f"Error deleting attachment: {e}")
+
+def add_failures_evidences_as_attachments(tc_tags, tc_context):
+    try:
+        context_dict = json.loads(tc_context)
+
+        for img in context_dict['value'][0]:
+            if "(failed).png" in img:
+                image_path = str(os.getcwd()) + "/cypress/results/screenshots" + str(img)
+                break
+
+        for tag in tc_tags.split():
+            if tag.startswith(f"{JIRA_PROJECT_NAME}-"):
+                url = f"{JIRA_SERVER}/rest/api/3/issue/{tag}/attachments" 
+                auth  = requests.auth.HTTPBasicAuth(JIRA_USERNAME,JIRA_PASSWORD)
+                headers = { 'X-Atlassian-Token': 'nocheck' }
+                files = {'file': open(image_path, 'rb')} 
+                requests.post(url, auth=auth, files=files, headers=headers) 
+
+    except Exception as e:
+            logger.error(f"Error adding attachment image: {e}")
 
 def update_jira_issue(issue_id, info):
     logger_update = logging.getLogger()
@@ -166,7 +255,7 @@ def main(jira_fields):
             loaded_json = load_json(file)
             if loaded_json:
                 reports.append(loaded_json)
-    
+
     final_report = merge_report_json_files(reports)
     enhanced_final_report = enhance_final_report(final_report)
 
