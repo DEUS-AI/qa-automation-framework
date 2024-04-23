@@ -10,6 +10,7 @@ module.exports = defineConfig({
     inlineAssets: false,
     saveAllAttempts: false,
     overwrite: false,
+    removeJsonsFolderAfterMerge: false
   },
 
   e2e: {

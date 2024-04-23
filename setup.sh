@@ -22,6 +22,7 @@ CYPRESS_COMMAND="cypress run"
 CUSTOM_ARGS=""
 ENV_ARG=""
 CONFIG_OPTIONS=""
+UPDATE_JIRA=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -41,6 +42,7 @@ while [[ $# -gt 0 ]]; do
             echo "  -e, --env           Specify cypress environment variables"
             echo "  -t, --tags          Specify the test suite or test tags to be executed." 
             echo "                        - Default is none, so all tests within the project will be executed"
+            echo "  -uj, --update-jira  Specify if JIRA issues should be updated based on test execution results."
             exit 0
             ;;
         -a|--acceptance)
@@ -71,6 +73,10 @@ while [[ $# -gt 0 ]]; do
             fi
             shift 2
             ;;
+        -uj|--update-jira)
+            UPDATE_JIRA="true"
+            shift 1
+            ;;
         *)
             echo "Unknown option: $1. Use -h or --help for usage information."
             exit 1
@@ -78,15 +84,15 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# replace yml environment variables
+# replace secrets on config.yml file
+ansible-playbook replaceConfigSecrets.yml
+
+# replace yml secrets, cy and environment variables
 if [[ -n "$CONFIG_OPTIONS" ]]; then 
     ansible-playbook replaceEnvVars.yml --extra-vars "$CONFIG_OPTIONS"
 else
     ansible-playbook replaceEnvVars.yml
 fi
-
-# replace cypress variables
-ansible-playbook replaceCyVars.yml
 
 # run main source code file to transform all codeless automation into js cypress
 # finish arranje the cypress architecture
@@ -99,5 +105,21 @@ echo $CYPRESS_COMMAND $CUSTOM_ARGS $ENV_ARG && $CYPRESS_COMMAND $CUSTOM_ARGS $EN
 # generate test execution html report and process its location
 # NOTE: when running with docker a volume with root level must be mounted
 rm -rf ./../automation/report 2>/dev/null || true
-mv cypress/report ./../automation 
+cp -R cypress/report ./../automation 
 [ -d "cypress/logs" ] && cp -R cypress/logs ./../automation/report/failures 
+
+
+# Update Jira
+echo "======================================================================"
+echo "JIRA UPDATE"
+echo "======================================================================"
+echo ""
+if [[ -n "$UPDATE_JIRA" ]]; then 
+    python3 utils/updateJira.py
+    echo ""
+    echo "JIRA update finished."
+else
+    echo ""
+    echo "JIRA update not requested."
+fi
+echo "======================================================================"

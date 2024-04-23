@@ -1,17 +1,14 @@
 ---
-- name: Replace environment variables in yml files
-  connection: ansible.netcommon.network_cli
-  gather_facts: false
+- name: Replace secrets and env vars in acceptance and commands
   hosts: localhost
   vars:
     env_files_path: "./automation/support/env/"
-    template_file: "{{ env_files_path }}{{ env }}.env.yml"
-    acceptance_path: "./automation/acceptance"
-    commands_path: "./automation/support/commands"
+    template_file: "{{ env_files_path }}{{ env | default('default_env') }}.env.yml"
   vars_files:
+    - "./automation/support/secrets.yml"
     - "./automation/support/config.yml"
-
-  tasks:        
+  
+  tasks:
     - name: Check if specific environment template file exists
       stat:
         path: "{{ template_file }}"
@@ -22,18 +19,35 @@
       when: template_file_check.stat.exists
       ignore_errors: true
     
-    - name: List tests and commands yml files
+    - name: Find all acceptance and commands yml files
       find:
+        paths:
+          - ./automation/acceptance
+          - ./automation/support/commands
+        recurse: yes
+        patterns: "*.yml"
+      register: yml_files
+
+    - name: Replace values secrets and env vars in acceptance and commands
+      template:
+        src: "{{ item.path }}"
+        dest: "{{ item.path }}"
+      loop: "{{ yml_files.files }}"
+      when: item.path != "updated_test.yml" # Exclude the updated file itself
+
+    - name: Loop over acceptance and commands yml files
+      ansible.builtin.find:
         paths: "{{ item }}"
+        patterns: "*.yml"
         recurse: yes
       register: yml_files
       loop:
-        - "{{ acceptance_path }}"
-        - "{{ commands_path }}"
+        - ./automation/acceptance
+        - ./automation/support/commands
 
-    - name: Replace env vars from tests and commands yml files
-      template: 
-        src: "{{ item.path }}"
-        dest: "{{ item.path }}"
+    - name: Replace test variables on acceptance and command yml files
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: '\$var_(\w+)'
+        replace: '${Cypress.env("\1")}'
       with_items: "{{ yml_files.results | map(attribute='files') | list }}"
-      when: item.path.endswith('.yml') and template_file_check.stat.exists
