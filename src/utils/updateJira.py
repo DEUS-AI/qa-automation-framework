@@ -128,14 +128,16 @@ def map_tc_uuid_with_tag(test_set, state = "passes"):
                         state_chosen[state_chosen.index(tc_uuid)] = tag
                         break  # Stop searching for tags
                 break  # Stop searching for test cases
+    
+    state_chosen[:] = [item for item in state_chosen if item.startswith(f"{JIRA_PROJECT_NAME}-")]
 
 def set_ts_info(test_set, jira_fields):
     overall_status = "❌ Failed" if test_set['suiteState']['failures'] != 0 else "✅ Success"
 
-    passed_issues = f"Passed Test Cases:\n{f'{chr(10)}'.join(test_set['passes'])}" if test_set['passes'] else ""
-    failed_issues = f"Failed Test Cases:\n{f'{chr(10)}'.join(test_set['failures'])}" if test_set['failures'] else ""
-    pending_issues = f"Pending Test Cases:\n{f'{chr(10)}'.join(test_set['pending'])}" if test_set['pending'] else ""
-    skipped_issues = f"Skipped Test Cases:\n{f'{chr(10)}'.join(test_set['skipped'])}" if test_set['skipped'] else ""
+    passed_issues = f"Passed Test Cases\n{f'{chr(10)}'.join(test_set['passes'])}" if test_set['passes'] else ""
+    failed_issues = f"Failed Test Cases\n{f'{chr(10)}'.join(test_set['failures'])}" if test_set['failures'] else ""
+    pending_issues = f"Pending Test Cases\n{f'{chr(10)}'.join(test_set['pending'])}" if test_set['pending'] else ""
+    skipped_issues = f"Skipped Test Cases\n{f'{chr(10)}'.join(test_set['skipped'])}" if test_set['skipped'] else ""
 
     ts_info = {
         f"{jira_fields['overall_info']['fld_id']}": f"""
@@ -146,6 +148,16 @@ def set_ts_info(test_set, jira_fields):
         Test Cases Status:
         |✅ Passed|❌ Failed|🕖 Pending|➰Skipped|
         |{test_set['suiteState']['passes']}|{test_set['suiteState']['failures']}|{test_set['suiteState']['pending']}|{test_set['suiteState']['skipped']}|
+        
+        Total of {test_set['suiteState']['passes'] + 
+                  test_set['suiteState']['failures'] + 
+                  test_set['suiteState']['pending'] + 
+                  test_set['suiteState']['skipped']} test cases were executed.
+        From those, {len(test_set['passes']) + 
+                       len(test_set['failures']) + 
+                       len(test_set['pending']) + 
+                       len(test_set['skipped'])} tests contained a tag matching a test case issue id.
+        They are:
         
         {passed_issues}
 
