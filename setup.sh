@@ -31,6 +31,8 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  -h, --help          Show this help message"
             echo "  -a, --acceptance    Specify the acceptance file(s) to run."
+            echo "                        - All paths should start after the acceptance dir;"
+            echo "                        - Is not recommended using file extensions, only the names;"
             echo "                        - Multiple files should be seperated with comma;"
             echo "                        - To run all tests within a folder use glob (**, *), e.g -a automation/acceptance/regression/**"
             echo "  -b, --browser       Specify the browser to use (e.g. electon, chrome, firefox) for web test cases"
@@ -46,7 +48,7 @@ while [[ $# -gt 0 ]]; do
             exit 0
             ;;
         -a|--acceptance)
-            CUSTOM_ARGS+=" --spec $2"
+            CUSTOM_ARGS+=" --spec cypress/acceptance/$2"
             shift 2
             ;;
         -b|--browser)
