@@ -33,11 +33,10 @@ THe following steps describes the process of how to locally publish a framework 
 
 ### Publishing image via gh actions
 
-Theres is currently a workflow named - Build and Push Image for CI - that builds and publish a framework image that can be used by CI pipelines to run tests.
-
+There's is currently a workflow named - Build and Push Image for CI - that builds and publish a framework image that can be used by CI pipelines to run tests.
 
 ## How to run tests
-Use the folling command to run the automation tests:
+Use the folling command to locally run the automation tests:
 
 <br>
 
@@ -47,11 +46,17 @@ Use the folling command to run the automation tests:
 
 The ```[OPTIONS]``` can be replaced with one or more parameters to define some execution parameters. For detailed information on which parameters can be used, type ```-h``` or ```--help```.
 
+Use the folling command to run the automation tests on a CI pipeline:
+
+<br>
+
+```docker run -t -v ${GITHUB_WORKSPACE}/automation:/app/automation --rm ghcr.io/deus-ai/qa-automation-framework_amd64:latest [OPTIONS]```
+
 <br>
 
 > Notes: 
-> <br>- In order to use this image and run tests, the user needs to have access to DEUS-AI org on github.
-> <br>- Each time a new image version is up, it is recomended to delete the local image. 
+> <br>- In order to use these images and run tests, the user needs to have access to DEUS-AI org on github.
+> <br>- Each time a new image version is up, it is recomended to delete the local image (not applicable to CI pipelines). 
 > <br>- In case, while running the command, the following error happens:
 > <br>
 > <br>```docker: Error response from daemon: Head "https://ghcr.io/v2/deus-ai/qa-automation-framework/manifests/latest": unauthorized.```
@@ -60,4 +65,4 @@ The ```[OPTIONS]``` can be replaced with one or more parameters to define some e
 > <br>Do a registry login with the bellow command and then try again.
 > <br>
 > <br>```docker login --username <your_username> --password <personal_access_token> ghcr.io/deus-ai```
-> <br> 
+> <br>
