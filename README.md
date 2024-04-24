@@ -36,7 +36,7 @@ THe following steps describes the process of how to locally publish a framework 
 There's is currently a workflow named - Build and Push Image for CI - that builds and publish a framework image that can be used by CI pipelines to run tests.
 
 ## How to run tests
-Use the folling command to locally run the automation tests:
+### Use the folling command to locally run the automation tests:
 
 <br>
 
@@ -46,7 +46,7 @@ Use the folling command to locally run the automation tests:
 
 The ```[OPTIONS]``` can be replaced with one or more parameters to define some execution parameters. For detailed information on which parameters can be used, type ```-h``` or ```--help```.
 
-Use the folling command to run the automation tests on a CI pipeline:
+### Use the folling command to run the automation tests on a CI pipeline:
 
 <br>
 
