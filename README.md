@@ -14,6 +14,8 @@ Tech stack:
 ## Publish new image version into ghcr
 ### Manual local push
 
+THe following steps describes the process of how to locally publish a framework image that can be used to locally run tests.
+
 - Login into ghcr
     - ```docker login --username <your_username> --password <personal_access_token> ghcr.io``` 
 
@@ -29,7 +31,9 @@ Tech stack:
 
 <br>
 
-> Note: Whenever a push is done to the reposotory main branch, a github action will automatically trigger to build a new image and publish it on ghcr.
+### Publishing image via gh actions
+
+Theres is currently a workflow named - Build and Push Image for CI - that builds and publish a framework image that can be used by CI pipelines to run tests.
 
 
 ## How to run tests
