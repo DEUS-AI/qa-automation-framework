@@ -11,5 +11,5 @@ jobs:
       - name: Build and push the image
         run: |
           docker login --username JoavFernandes --password ${{ secrets.JF_GH_PAT }} ghcr.io
-          docker build . --tag ghcr.io/deus-ai/qa-automation-framework:latest
-          docker push ghcr.io/deus-ai/qa-automation-framework:latest
+          docker build . --tag ghcr.io/deus-ai/qa-automation-framework_amd64:latest
+          docker push ghcr.io/deus-ai/qa-automation-framework_amd64:latest
