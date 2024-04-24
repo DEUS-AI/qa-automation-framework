@@ -1,4 +1,4 @@
-name: QA Automation Framework Docker Image CI for GHCR
+name: Build and Push Image for CI
 
 on:
   workflow_dispatch: # push
