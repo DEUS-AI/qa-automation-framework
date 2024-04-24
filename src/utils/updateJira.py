@@ -2,7 +2,8 @@ import json
 import yaml
 import logging
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from jira import JIRA
 from jinja2 import Environment, FileSystemLoader
@@ -131,13 +132,55 @@ def map_tc_uuid_with_tag(test_set, state = "passes"):
     
     state_chosen[:] = [item for item in state_chosen if item.startswith(f"{JIRA_PROJECT_NAME}-")]
 
+def combine_objects_by_tag(objects):
+    combined_objects = defaultdict(dict)
+    unmerged_objects = []
+    for obj in objects:
+        tags = obj["TestSet"]["tags"].split()
+        merged = False
+        for tag in tags:
+            if tag.startswith("FM-"):
+                tag_key = tag[:tag.index('-') + 1]  # Get the FM- part as the key
+                if tag_key not in combined_objects:
+                    combined_objects[tag_key]["TestSet"] = obj["TestSet"].copy()
+                    combined_objects[tag_key]["TestSet"]["duration"] = timedelta()  # Initialize duration as timedelta
+                    combined_objects[tag_key]["TestSet"]["file"] = [obj["TestSet"]["file"]]  # Initialize as list
+                    combined_objects[tag_key]["TestSet"]["title"] = [obj["TestSet"]["title"]]  # Initialize as list
+                    combined_objects[tag_key]["tags"] = obj["TestSet"]["tags"].replace(tag, '').strip()
+                else:
+                    combined_objects[tag_key]["TestSet"]["file"].append(obj["TestSet"]["file"])
+                    combined_objects[tag_key]["TestSet"]["title"].append(obj["TestSet"]["title"])
+                    combined_objects[tag_key]["TestSet"]["suiteState"]["passes"] += obj["TestSet"]["suiteState"]["passes"]
+                    combined_objects[tag_key]["TestSet"]["suiteState"]["failures"] += obj["TestSet"]["suiteState"]["failures"]
+                    combined_objects[tag_key]["TestSet"]["suiteState"]["pending"] += obj["TestSet"]["suiteState"]["pending"]
+                    combined_objects[tag_key]["TestSet"]["suiteState"]["skipped"] += obj["TestSet"]["suiteState"]["skipped"]
+                    combined_objects[tag_key]["TestSet"]["tags"] += " " + obj["TestSet"]["tags"].replace(tag, '').strip()
+                    combined_objects[tag_key]["TestSet"]["TestCases"].extend(obj["TestSet"]["TestCases"])
+                    combined_objects[tag_key]["TestSet"]["passes"].extend(obj["TestSet"]["passes"])
+                    combined_objects[tag_key]["TestSet"]["failures"].extend(obj["TestSet"]["failures"])
+                    combined_objects[tag_key]["TestSet"]["pending"].extend(obj["TestSet"]["pending"])
+                    combined_objects[tag_key]["TestSet"]["skipped"].extend(obj["TestSet"]["skipped"])
+                # Sum the duration
+                duration_parts = obj["TestSet"]["duration"].split(':')
+                combined_objects[tag_key]["TestSet"]["duration"] += timedelta(hours=int(duration_parts[0]), minutes=int(duration_parts[1]), seconds=int(duration_parts[2]))
+                merged = True
+                break
+        if not merged:
+            unmerged_objects.append(obj)
+    
+    # Convert timedelta to string before returning
+    for obj in combined_objects.values():
+        obj["TestSet"]["duration"] = str(obj["TestSet"]["duration"])
+
+    return list(combined_objects.values()) + unmerged_objects
+
 def set_ts_info(test_set, jira_fields):
     overall_status = "❌ Failed" if test_set['suiteState']['failures'] != 0 else "✅ Success"
 
-    passed_issues = f"Passed Test Cases\n{f'{chr(10)}'.join(test_set['passes'])}" if test_set['passes'] else ""
-    failed_issues = f"Failed Test Cases\n{f'{chr(10)}'.join(test_set['failures'])}" if test_set['failures'] else ""
-    pending_issues = f"Pending Test Cases\n{f'{chr(10)}'.join(test_set['pending'])}" if test_set['pending'] else ""
-    skipped_issues = f"Skipped Test Cases\n{f'{chr(10)}'.join(test_set['skipped'])}" if test_set['skipped'] else ""
+    passed_issues = f"✅\n\n{f'{chr(10)}'.join(test_set['passes'])}" if test_set['passes'] else ""
+    failed_issues = f"❌\n\n{f'{chr(10)}'.join(test_set['failures'])}" if test_set['failures'] else ""
+    pending_issues = f"🕖\n\n{f'{chr(10)}'.join(test_set['pending'])}" if test_set['pending'] else ""
+    skipped_issues = f"➰\n\n{f'{chr(10)}'.join(test_set['skipped'])}" if test_set['skipped'] else ""
 
     ts_info = {
         f"{jira_fields['overall_info']['fld_id']}": f"""
@@ -156,7 +199,7 @@ def set_ts_info(test_set, jira_fields):
         From those, {len(test_set['passes']) + 
                        len(test_set['failures']) + 
                        len(test_set['pending']) + 
-                       len(test_set['skipped'])} tests contained a tag matching a test case issue id.
+                       len(test_set['skipped'])} tests contained a tag matching the project issue id pattern.
         They are:
         
         {passed_issues}
@@ -174,7 +217,7 @@ def set_tc_info(test_case, jira_fields):
     status_map = {
         "passed": ("✅ Success", f"{jira_fields['test_case_status']['options_id']['passed']}"),
         "failed": ("❌ Fail", f"{jira_fields['test_case_status']['options_id']['failed']}"),
-        "skipped": ("➰Skipped", f"{jira_fields['test_case_status']['options_id']['skipped']}"),
+        "skipped": ("➰ Skipped", f"{jira_fields['test_case_status']['options_id']['skipped']}"),
         "pending": ("🕖 Pending", f"{jira_fields['test_case_status']['options_id']['pending']}"),
         "unknown": ("🤷 unknown", f"{jira_fields['test_case_status']['options_id']['not_tested']}")
     }
@@ -270,11 +313,12 @@ def main(jira_fields):
 
     final_report = merge_report_json_files(reports)
     enhanced_final_report = enhance_final_report(final_report)
+    combined_final_report = combine_objects_by_tag(enhanced_final_report)
 
     ts_updates = []
     tc_updates = []
 
-    for test_set in enhanced_final_report:
+    for test_set in combined_final_report:
         ts_info = set_ts_info(test_set["TestSet"], jira_fields)
         for tag in test_set["TestSet"].get("tags", "").split():
             if f"{JIRA_PROJECT_NAME}-" in tag:
