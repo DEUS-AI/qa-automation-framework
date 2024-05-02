@@ -104,6 +104,14 @@ python3 main.py && mv cy_tests/* cypress/acceptance && rm -R cy_tests && cp -R a
 # run tests
 echo $CYPRESS_COMMAND $CUSTOM_ARGS $ENV_ARG && $CYPRESS_COMMAND $CUSTOM_ARGS $ENV_ARG
 
+CYPRESS_EXIT_CODE=$?
+
+# If Cypress command fails, exit the script with a non-zero status
+if [[ $CYPRESS_EXIT_CODE -ne 0 ]]; then
+    echo "Cypress tests failed. Exiting with status code $CYPRESS_EXIT_CODE."
+    exit $CYPRESS_EXIT_CODE
+fi
+
 # generate test execution html report and process its location
 # NOTE: when running with docker a volume with root level must be mounted
 rm -rf ./../automation/report 2>/dev/null || true
