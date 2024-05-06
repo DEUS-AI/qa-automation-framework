@@ -537,9 +537,6 @@ class ActionMethods:
 
         if "body" in args.keys():
             res_body = [{k: v} for (k, v) in args["body"].items()]
-
-        print(args["headers"])
-        print(str(args["headers"]).replace("'","`"))
         
         return template.render(
             method=args["method"] if args.get("method") else "POST",
