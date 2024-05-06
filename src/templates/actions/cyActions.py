@@ -193,6 +193,45 @@ def template_actions():
             })
         })
         """,
+
+        "sendRequestToUploadFileAsFormData": 
+        """
+        .then(() => {
+            cy.fixture('{{ file }}', 'binary').then(file => {
+                
+                const formData = new FormData()
+                const blob = Cypress.Blob.binaryStringToBlob(file, '{{ file }}')
+
+                formData.append('files', blob, '{{ file }}')
+                {% if append_args is defined %}
+                    {% for arg_dict in append_args %}
+                        {% for key, value in arg_dict.items() %}
+                            formData.append('{{ key }}', '{{ value }}');
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+
+                cy.request({
+                    method: '{{ method }}',
+                    url: '{{ url }}',
+                    auth: '{{ auth }}',
+                    body: formData,
+                    headers: {{ headers }},
+                    qs: {{ qs }},
+                    log: {{ log }},
+                    failOnStatusCode: {{ failOnStatusCode }},
+                    followRedirect: {{ followRedirect }},
+                    form: {{ form }},
+                    retryOnStatusCodeFailure: {{ retryOnStatusCodeFailure }},
+                    retryOnNetworkFailure: {{ retryOnNetworkFailure }},
+                    encoding: '{{ encoding }}',
+                    timeout: {{ timeout }}
+                }).then(res => {
+                    cy.wrap(res).as('{{ alias }}')
+                })
+            })
+        })
+        """,
         
         "sendGraphqlRequest": 
         """

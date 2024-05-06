@@ -533,6 +533,34 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def sendRequestToUploadFileAsFormData(template, args):
+
+        if "body" in args.keys():
+            res_body = [{k: v} for (k, v) in args["body"].items()]
+
+        print(args["headers"])
+        print(str(args["headers"]).replace("'","`"))
+        
+        return template.render(
+            method=args["method"] if args.get("method") else "POST",
+            file=args["file"],
+            append_args=res_body if args.get("body") else [{}],
+            url=args["url"],
+            alias=args["alias"],
+            auth=args["auth"] if args.get("auth") else "",
+            headers=args["headers"] if args.get("headers") else {},
+            qs=args["qs"] if args.get("qs") else {},
+            log=args["log"] if args.get("log") else "true",
+            failOnStatusCode=args["failOnStatusCode"] if args.get("failOnStatusCode") else "true",
+            followRedirect=args["followRedirect"] if args.get("followRedirect") else "true",
+            form=args["form"] if args.get("form") else "false",
+            encoding=args["encoding"] if args.get("encoding") else "utf8",
+            retryOnStatusCodeFailure=args["retryOnStatusCodeFailure"] if args.get("retryOnStatusCodeFailure") else "false",
+            retryOnNetworkFailure=args["retryOnNetworkFailure"] if args.get("retryOnNetworkFailure") else "true",
+            timeout=args["timeout"] if args.get("timeout") else 10000
+        ) + "\n"
+
+    @staticmethod
     def sendGraphqlRequest(template, args):
         return template.render(
             url=args["url"],
