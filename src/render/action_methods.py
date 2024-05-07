@@ -552,6 +552,7 @@ class ActionMethods:
         return template.render(
             method=args["method"] if args.get("method") else "POST",
             file=args["file"],
+            fileFieldName=args["fileFieldName"] if args.get("fileFieldName") else "files",
             append_args=res_body if args.get("body") else [{}],
             url=args["url"],
             alias=args["alias"],

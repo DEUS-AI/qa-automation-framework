@@ -202,7 +202,7 @@ def template_actions():
                 const formData = new FormData()
                 const blob = Cypress.Blob.binaryStringToBlob(file, '{{ file }}')
 
-                formData.append('files', blob, '{{ file }}')
+                formData.append(`{{ fileFieldName }}`, blob, '{{ file }}')
                 {% if append_args is defined %}
                     {% for arg_dict in append_args %}
                         {% for key, value in arg_dict.items() %}
