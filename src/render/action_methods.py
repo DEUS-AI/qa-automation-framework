@@ -496,14 +496,17 @@ class ActionMethods:
     @staticmethod
     def sendRequest(template, args):
         if "headers" in args.keys():
-            res_headers = process_request_headers(args["headers"])
+            res_headers = process_request_obj_inputs(args["headers"])
         
+        if "body" in args.keys():
+            res_body = process_request_obj_inputs(args["body"])
+
         return template.render(
             method=args["method"],
             url=args["url"],
             alias=args["alias"],
             auth=args["auth"] if args.get("auth") else "",
-            body=args["body"] if args.get("body") else {},
+            body=res_body if args.get("body") else {},
             headers=res_headers if args.get("headers") else {},
             qs=args["qs"] if args.get("qs") else {},
             log=args["log"] if args.get("log") else "true",
@@ -519,7 +522,7 @@ class ActionMethods:
     @staticmethod
     def sendPostRequestWithPayloadFromFile(template, args):
         if "headers" in args.keys():
-            res_headers = process_request_headers(args["headers"])
+            res_headers = process_request_obj_inputs(args["headers"])
 
         return template.render(
             url=args["url"],
@@ -541,7 +544,7 @@ class ActionMethods:
     @staticmethod
     def sendRequestToUploadFileAsFormData(template, args):
         if "headers" in args.keys():
-            res_headers = process_request_headers(args["headers"])
+            res_headers = process_request_obj_inputs(args["headers"])
 
         if "body" in args.keys():
             res_body = [{k: v} for (k, v) in args["body"].items()]
@@ -553,8 +556,6 @@ class ActionMethods:
             url=args["url"],
             alias=args["alias"],
             auth=args["auth"] if args.get("auth") else "",
-            # headers=args["headers"] if args.get("headers") else {},
-            # headers=temp if args.get("headers") else {},
             headers=res_headers if args.get("headers") else {},
             qs=args["qs"] if args.get("qs") else {},
             log=args["log"] if args.get("log") else "true",
@@ -570,14 +571,17 @@ class ActionMethods:
     @staticmethod
     def sendGraphqlRequest(template, args):
         if "headers" in args.keys():
-            res_headers = process_request_headers(args["headers"])
+            res_headers = process_request_obj_inputs(args["headers"])
         
+        if "variables" in args.keys():
+            res_variables = process_request_obj_inputs(args["variables"])
+
         return template.render(
             url=args["url"],
             alias=args["alias"],
             operationName=args["operationName"] if args.get("operationName") else "",
             query=args["query"],
-            variables=args["variables"],
+            variables=res_variables if args.get("variables") else {},
             headers=res_headers if args.get("headers") else {},
             log=args["log"] if args.get("log") else "true",
             failOnStatusCode=args["failOnStatusCode"] if args.get("failOnStatusCode") else "true",
@@ -626,9 +630,9 @@ class ActionMethods:
     
 
 # Util functions
-def process_request_headers(headers):
+def process_request_obj_inputs(obj):
     temp = {}
-    for k,v in headers.items():
+    for k,v in obj.items():
         temp[k] = f"`{v}`"
 
     res = '{'

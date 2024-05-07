@@ -12,6 +12,7 @@ RUN npm install --save-dev cypress-plugin-xhr-toggle
 RUN npm install --save-dev cypress-xpath
 RUN npm install --save-dev cypress-mochawesome-reporter
 RUN npm i -D @cypress/grep
+RUN npm install @faker-js/faker --save-dev
 
 
 RUN chmod +x setup.sh
