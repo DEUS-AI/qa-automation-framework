@@ -495,13 +495,16 @@ class ActionMethods:
 
     @staticmethod
     def sendRequest(template, args):
+        if "headers" in args.keys():
+            res_headers = process_request_headers(args["headers"])
+        
         return template.render(
             method=args["method"],
             url=args["url"],
             alias=args["alias"],
             auth=args["auth"] if args.get("auth") else "",
             body=args["body"] if args.get("body") else {},
-            headers=args["headers"] if args.get("headers") else {},
+            headers=res_headers if args.get("headers") else {},
             qs=args["qs"] if args.get("qs") else {},
             log=args["log"] if args.get("log") else "true",
             failOnStatusCode=args["failOnStatusCode"] if args.get("failOnStatusCode") else "true",
@@ -515,12 +518,15 @@ class ActionMethods:
 
     @staticmethod
     def sendPostRequestWithPayloadFromFile(template, args):
+        if "headers" in args.keys():
+            res_headers = process_request_headers(args["headers"])
+
         return template.render(
             url=args["url"],
             alias=args["alias"],
             body=args["body"],
             auth=args["auth"] if args.get("auth") else "",
-            headers=args["headers"] if args.get("headers") else {},
+            headers=res_headers if args.get("headers") else {},
             qs=args["qs"] if args.get("qs") else {},
             log=args["log"] if args.get("log") else "true",
             failOnStatusCode=args["failOnStatusCode"] if args.get("failOnStatusCode") else "true",
@@ -534,6 +540,8 @@ class ActionMethods:
 
     @staticmethod
     def sendRequestToUploadFileAsFormData(template, args):
+        if "headers" in args.keys():
+            res_headers = process_request_headers(args["headers"])
 
         if "body" in args.keys():
             res_body = [{k: v} for (k, v) in args["body"].items()]
@@ -545,7 +553,9 @@ class ActionMethods:
             url=args["url"],
             alias=args["alias"],
             auth=args["auth"] if args.get("auth") else "",
-            headers=args["headers"] if args.get("headers") else {},
+            # headers=args["headers"] if args.get("headers") else {},
+            # headers=temp if args.get("headers") else {},
+            headers=res_headers if args.get("headers") else {},
             qs=args["qs"] if args.get("qs") else {},
             log=args["log"] if args.get("log") else "true",
             failOnStatusCode=args["failOnStatusCode"] if args.get("failOnStatusCode") else "true",
@@ -559,13 +569,16 @@ class ActionMethods:
 
     @staticmethod
     def sendGraphqlRequest(template, args):
+        if "headers" in args.keys():
+            res_headers = process_request_headers(args["headers"])
+        
         return template.render(
             url=args["url"],
             alias=args["alias"],
             operationName=args["operationName"] if args.get("operationName") else "",
             query=args["query"],
             variables=args["variables"],
-            headers=args["headers"] if args.get("headers") else {},
+            headers=res_headers if args.get("headers") else {},
             log=args["log"] if args.get("log") else "true",
             failOnStatusCode=args["failOnStatusCode"] if args.get("failOnStatusCode") else "true",
             followRedirect=args["followRedirect"] if args.get("followRedirect") else "true",
@@ -610,3 +623,20 @@ class ActionMethods:
             cy_var=args["name"],
             path_to_property=args["propertyPath"]
         ) + "\n"
+    
+
+# Util functions
+def process_request_headers(headers):
+    temp = {}
+    for k,v in headers.items():
+        temp[k] = f"`{v}`"
+
+    res = '{'
+    for index, (key, value) in enumerate(temp.items()):
+        if index == len(temp) - 1:
+            res += f"'{key}': {value}"
+        else:
+            res += f"'{key}': {value},"
+    res += '}'
+
+    return res
