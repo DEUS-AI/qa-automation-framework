@@ -31,14 +31,14 @@ def template_actions():
     }
 
     web = {
-        "assertUrlEquals": ".then(() => {cy.url().should('eq', `{{ value }}`)})",
-        "assertUrlContains": ".then(() => {cy.url().should('include', `{{ value }}`)})",
+        "assertUrlEquals": ".then(() => {cy.url({ timeout: {{ timeout }} }).should('eq', `{{ value }}`)})",
+        "assertUrlContains": ".then(() => {cy.url({ timeout: {{ timeout }} }).should('include', `{{ value }}`)})",
         "assertPageTitleEquals": ".then(() => {cy.title().should('eq', `{{ value }}`)})",
         "assertPageTitleContains": ".then(() => {cy.title().should('include', `{{ value }}`)})",
-        "assertElementExists": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('exist')})",
-        "assertElementNotExists": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('not.exist')})",
-        "assertElementIsVisible": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('be.visible')})",
-        "assertElementIsNotVisible": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('not.be.visible')})",
+        "assertElementExists": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).should('exist')})",
+        "assertElementNotExists": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).should('not.exist')})",
+        "assertElementIsVisible": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).should('be.visible')})",
+        "assertElementIsNotVisible": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).should('not.be.visible')})",
         "assertElementHasText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.text', `{{ value }}`)})",
         "assertElementIndexHasText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').eq({{ index }}).should('have.text', `{{ value }}`)})",
         "assertElementContainsText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('include.text', `{{ value }}`)})",

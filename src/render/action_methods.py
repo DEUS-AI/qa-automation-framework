@@ -125,12 +125,14 @@ class ActionMethods:
     @staticmethod
     def assertUrlEquals(template, args):
         return template.render(
+            timeout=args["timeout"] if args.get("timeout") else 4000,
             value=args["value"]
         ) + "\n"
     
     @staticmethod
     def assertUrlContains(template, args):
         return template.render(
+            timeout=args["timeout"] if args.get("timeout") else 4000,
             value=args["value"]
         ) + "\n"
     
@@ -150,6 +152,7 @@ class ActionMethods:
     def assertElementExists(template, args):
         return template.render(
             locator_type=args["element"]["type"],
+            timeout=args["timeout"] if args.get("timeout") else 4000,
             locator=args["element"]["locator"]
         ) + "\n"
 
@@ -157,6 +160,7 @@ class ActionMethods:
     def assertElementNotExists(template, args):
         return template.render(
             locator_type=args["element"]["type"],
+            timeout=args["timeout"] if args.get("timeout") else 4000,
             locator=args["element"]["locator"]
         ) + "\n"
 
@@ -164,6 +168,7 @@ class ActionMethods:
     def assertElementIsVisible(template, args):
         return template.render(
             locator_type=args["element"]["type"],
+            timeout=args["timeout"] if args.get("timeout") else 4000,
             locator=args["element"]["locator"]
         ) + "\n"
 
@@ -171,6 +176,7 @@ class ActionMethods:
     def assertElementIsNotVisible(template, args):
         return template.render(
             locator_type=args["element"]["type"],
+            timeout=args["timeout"] if args.get("timeout") else 4000,
             locator=args["element"]["locator"]
         ) + "\n"
 
