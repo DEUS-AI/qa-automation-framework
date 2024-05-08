@@ -273,6 +273,32 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def assertLocalStorageItemEquals(template, args):
+        return template.render(
+            key=args["key"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertSessionStorageItemEquals(template, args):
+        return template.render(
+            key=args["key"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertLocalStorageItemIsNull(template, args):
+        return template.render(
+            key=args["key"]
+        ) + "\n"
+
+    @staticmethod
+    def assertSessionStorageItemIsNull(template, args):
+        return template.render(
+            key=args["key"]
+        ) + "\n"
+
+    @staticmethod
     def assertFileContentContainsText(template, args):
         return template.render(
             file=args["filename"],
@@ -294,6 +320,14 @@ class ActionMethods:
             locator=args["element"]["locator"],
             file=args["filename"]
         ) + "\n"
+
+    @staticmethod
+    def clearAllLocalStorage(template):
+        return template.render() + "\n"
+
+    @staticmethod
+    def clearAllSessionStorage(template):
+        return template.render() + "\n"
 
     @staticmethod
     def clearField(template, args):
@@ -399,6 +433,20 @@ class ActionMethods:
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
             cy_var=args["name"]
+        ) + "\n"
+
+    @staticmethod
+    def setLocalStorage(template, args):
+        return template.render(
+            key=args["key"],
+            value=args["value"],
+        ) + "\n"
+
+    @staticmethod
+    def setSessionStorage(template, args):
+        return template.render(
+            key=args["key"],
+            value=args["value"],
         ) + "\n"
 
     @staticmethod
