@@ -18,8 +18,7 @@ def template_actions():
                 }, {
                     validate() {
                         {{ validate }}
-                        }
-                }, {
+                        },
                     cacheAcrossSpecs: {{ cache }}
                 }
             )
