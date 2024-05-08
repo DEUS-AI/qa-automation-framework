@@ -116,6 +116,13 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def viewport(template, args):
+        return template.render(
+            width=args["width"] if args.get("width") else 1000,
+            height=args["height"] if args.get("height") else 660,
+        ) + "\n"
+
+    @staticmethod
     def wait(template, args):
         return template.render(
             value=args["value"]

@@ -27,6 +27,7 @@ def template_actions():
         "stubResponse": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, body: {{ body }} }).as('{{ alias }}')})",
         "stubResponseFromFile": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, fixture: `{{ file }}` }).as('{{ alias }}')})",
         "takeScreenshot": ".then(() => {cy.screenshot(`{{filename}}`)})",
+        "viewport": ".then(() => {cy.viewport({{ width }}, {{ height }})})",
         "wait": ".then(() => {cy.wait({{ value }})})"
     }
 
