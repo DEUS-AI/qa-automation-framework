@@ -289,7 +289,7 @@ def template_actions():
         """
         .then(() => {
             cy.get('@{{ alias }}').then( response => {
-                Cypress.env('{{ cy_var }}', response.body.{{ path_to_property }})
+                Cypress.env('{{ cy_var }}', response.body{{ path_to_property }})
             })
         })
         """,
@@ -307,7 +307,7 @@ def template_actions():
         """
         .then(() => {
             cy.get('@{{ alias }}').then( response => {
-                Cypress.env('{{ cy_var }}', response.headers.{{ path_to_property }})
+                Cypress.env('{{ cy_var }}', response.headers{{ path_to_property }})
             })
         })
         """

@@ -672,7 +672,7 @@ class ActionMethods:
         return template.render(
             alias=args["alias"],
             cy_var=args["name"],
-            path_to_property=args["propertyPath"]
+            path_to_property=process_request_property_path(args["propertyPath"])
         ) + "\n"
 
     @staticmethod
@@ -687,7 +687,7 @@ class ActionMethods:
         return template.render(
             alias=args["alias"],
             cy_var=args["name"],
-            path_to_property=args["propertyPath"]
+            path_to_property=process_request_property_path(args["propertyPath"])
         ) + "\n"
     
 
@@ -706,3 +706,9 @@ def process_request_obj_inputs(obj):
     res += '}'
 
     return res
+
+def process_request_property_path(value):
+    if str(value).startswith("["):
+        return value
+    
+    return f'.{value}'
