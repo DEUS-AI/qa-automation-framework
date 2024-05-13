@@ -2,24 +2,19 @@ def template_actions():
     general = {
         "assertRequestWasCalledGivenTimes": ".then(() => {cy.get('@{{ alias }}.all').then(cont => {expect(cont).to.have.length({{ value }})})})",
         "assertStubResponseBodyContains": ".then(() => {cy.wait('@{{ alias }}').then(cont => {expect(JSON.stringify(cont.response.body)).to.include(`{{ value }}`)})})",
-        "assertStubResponseBodyContainsA": """
-        .then(() => {
-            cy.wait('@{{ alias }}').then(cont => {expect(JSON.stringify(cont.response.body)).to.include(`{{ value }}`)})
-        })
-        """,
         "assertStubResponseBodyEquals": ".then(() => {cy.wait('@{{ alias }}').then(cont => {expect(JSON.stringify(cont.response.body)).to.eq(JSON.stringify({{ text }}))})})",
         "assertVariableContains": ".then(() => {expect(`{{ cy_var }}`).to.include(`{{ value }}`)})",
         "assertVariableEquals": ".then(() => {expect(`{{ cy_var }}`).to.eq(`{{ value }}`)})",
         "catchExceptions": ".then(() => {Cypress.on('uncaught:exception', (err, runnable) => {return false})})",
         "cyLog": ".then(() => {cy.log(`{{ value }}`)})",
         "command": ".then(() => {cy.{{ name }}({{ params }})})",
-        "interceptRequest": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}).as('{{ alias }}')})",
+        "interceptRequest": ".then(() => {cy.intercept({method:'{{ method }}', url: `{{ url }}`}).as('{{ alias }}')})",
         "interceptGqlRequest": """
         .then(() => {
             cy.intercept(
                 {
                     method:'POST',
-                    url: '{{ url }}'
+                    url: `{{ url }}`
                 },
                 (req) => {
                     if (req.body.operationName === `{{ operationName }}`) {
@@ -46,14 +41,14 @@ def template_actions():
             )
         })""",
         "setVariable": ".then(() => {Cypress.env('{{ cy_var }}', `{{ value }}`)})",
-        "stubResponse": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, body: {{ body }} }).as('{{ alias }}')})",
-        "stubResponseFromFile": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, fixture: `{{ file }}` }).as('{{ alias }}')})",
+        "stubResponse": ".then(() => {cy.intercept({method:'{{ method }}', url: `{{ url }}`}, { statusCode: {{ status_code }}, body: {{ body }} }).as('{{ alias }}')})",
+        "stubResponseFromFile": ".then(() => {cy.intercept({method:'{{ method }}', url: `{{ url }}`}, { statusCode: {{ status_code }}, fixture: `{{ file }}` }).as('{{ alias }}')})",
         "stubGqlResponseFromFile": """
         .then(() => {
             cy.intercept(
                 {
                     method: 'POST',
-                    url: '{{ url }}'
+                    url: `{{ url }}`
                 }, 
                 (req) => {
                     if (req.body.operationName === `{{ operationName }}`) {
@@ -224,8 +219,8 @@ def template_actions():
         .then(() => {
             cy.request({
                 method: '{{ method }}',
-                url: '{{ url }}',
-                auth: '{{ auth }}',
+                url: `{{ url }}`,
+                auth: `{{ auth }}`,
                 body: {{ body }},
                 headers: {{ headers }},
                 qs: {{ qs }},
@@ -249,8 +244,8 @@ def template_actions():
             cy.fixture('{{ body }}').then(payload => {        
                 cy.request({
                     method: 'POST',
-                    url: '{{ url }}',
-                    auth: '{{ auth }}',
+                    url: `{{ url }}`,
+                    auth: `{{ auth }}`,
                     body: payload,
                     headers: {{ headers }},
                     qs: {{ qs }},
@@ -288,8 +283,8 @@ def template_actions():
 
                 cy.request({
                     method: '{{ method }}',
-                    url: '{{ url }}',
-                    auth: '{{ auth }}',
+                    url: `{{ url }}`,
+                    auth: `{{ auth }}`,
                     body: formData,
                     headers: {{ headers }},
                     qs: {{ qs }},
@@ -314,7 +309,7 @@ def template_actions():
             cy.fixture('{{ query }}').then(query => {
                 cy.request({
                     method: 'POST',
-                    url: '{{ url }}',
+                    url: `{{ url }}`,
                     body: {
                         operationName: '{{ operationName }}',   
                         query: query,   
