@@ -143,7 +143,7 @@ class ActionMethods:
     @staticmethod
     def wait(template, args):
         return template.render(
-            value=args["value"]
+            value=f'`@{args["value"]}`' if type(args.get("value")) != int else args["value"]
         ) + "\n"
 
     # web actions
