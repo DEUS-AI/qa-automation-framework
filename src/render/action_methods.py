@@ -214,6 +214,14 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def assertEachElementHasText(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
     def assertElementIndexHasText(template, args):
         return template.render(
             locator_type=args["element"]["type"],
@@ -224,6 +232,14 @@ class ActionMethods:
 
     @staticmethod
     def assertElementContainsText(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertEachElementContainsText(template, args):
         return template.render(
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
