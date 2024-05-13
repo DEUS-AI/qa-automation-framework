@@ -558,7 +558,22 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def assertGqlResponseBodyNotHaveProperty(template, args):
+        return template.render(
+            alias=args["alias"],
+            property=args["property"]
+        ) + "\n"
+
+    @staticmethod
     def assertGqlResponseBodyPropertyHasValue(template, args):
+        return template.render(
+            alias=args["alias"],
+            property=args["property"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertGqlResponseBodyPropertyNotHaveValue(template, args):
         return template.render(
             alias=args["alias"],
             property=args["property"],
@@ -573,7 +588,22 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def assertGqlResponseBodyNotHaveNestedProperty(template, args):
+        return template.render(
+            alias=args["alias"],
+            nestedProperty=args["nestedProperty"]
+        ) + "\n"
+
+    @staticmethod
     def assertGqlResponseBodyNestedPropertyHasValue(template, args):
+        return template.render(
+            alias=args["alias"],
+            nestedProperty=args["nestedProperty"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertGqlResponseBodyNestedPropertyNotHaveValue(template, args):
         return template.render(
             alias=args["alias"],
             nestedProperty=args["nestedProperty"],

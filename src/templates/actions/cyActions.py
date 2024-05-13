@@ -170,10 +170,24 @@ def template_actions():
         })
         """,
 
+        "assertGqlResponseBodyNotHaveProperty":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its('response.body').should('not.have.property', `{{ property }}`)
+        })
+        """,
+
         "assertGqlResponseBodyPropertyHasValue":
         """
         .then(() => {
             cy.get('@{{ alias }}').its('response.body').should('have.property', `{{ property }}`, `{{ value }}`)
+        })
+        """,
+
+        "assertGqlResponseBodyPropertyNotHaveValue":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its('response.body').should('have.property', `{{ property }}`).should('not.eq', `{{ value }}`)
         })
         """,
 
@@ -184,10 +198,24 @@ def template_actions():
         })
         """,
 
+        "assertGqlResponseBodyNotHaveNestedProperty":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its('response.body').should('not.have.nested.property', `{{ nestedProperty }}`)
+        })
+        """,
+
         "assertGqlResponseBodyNestedPropertyHasValue":
         """
         .then(() => {
             cy.get('@{{ alias }}').its('response.body').should('have.nested.property', `{{ nestedProperty }}`, `{{ value }}`)
+        })
+        """,
+
+        "assertGqlResponseBodyNestedPropertyNotHaveValue":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its('response.body').should('have.nested.property', `{{ nestedProperty }}`).should('not.eq', `{{ value }}`)
         })
         """,
 
