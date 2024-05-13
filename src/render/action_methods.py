@@ -110,6 +110,16 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def stubGqlResponseFromFile(template, args):
+        return template.render(
+            url=args["url"],
+            operationName=args["operationName"],
+            status_code=args["statusCode"] if args.get("statusCode") else 200,
+            file=args["file"],
+            alias=args["alias"]
+        ) + "\n"
+
+    @staticmethod
     def takeScreenshot(template, args):
         return template.render(
             filename=args["filename"]

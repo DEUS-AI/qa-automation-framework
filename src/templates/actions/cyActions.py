@@ -26,6 +26,23 @@ def template_actions():
         "setVariable": ".then(() => {Cypress.env('{{ cy_var }}', `{{ value }}`)})",
         "stubResponse": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, body: {{ body }} }).as('{{ alias }}')})",
         "stubResponseFromFile": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}, { statusCode: {{ status_code }}, fixture: `{{ file }}` }).as('{{ alias }}')})",
+        "stubGqlResponseFromFile": """
+        .then(() => {
+            cy.intercept(
+                {
+                    method: 'POST',
+                    url: '{{ url }}'
+                }, 
+                (req) => {
+                    if (req.body.operationName === `{{ operationName }}`) {
+                        req.reply({ 
+                            statusCode: {{ status_code }},
+                            fixture: `{{ file }}` 
+                        })
+                    }
+                }
+            ).as('{{ alias }}')       
+        })""",
         "takeScreenshot": ".then(() => {cy.screenshot(`{{filename}}`)})",
         "viewport": ".then(() => {cy.viewport({{ width }}, {{ height }})})",
         "wait": ".then(() => {cy.wait({{ value }})})"
