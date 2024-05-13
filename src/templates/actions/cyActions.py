@@ -2,6 +2,11 @@ def template_actions():
     general = {
         "assertRequestWasCalledGivenTimes": ".then(() => {cy.get('@{{ alias }}.all').then(cont => {expect(cont).to.have.length({{ value }})})})",
         "assertStubResponseBodyContains": ".then(() => {cy.wait('@{{ alias }}').then(cont => {expect(JSON.stringify(cont.response.body)).to.include(`{{ value }}`)})})",
+        "assertStubResponseBodyContainsA": """
+        .then(() => {
+            cy.wait('@{{ alias }}').then(cont => {expect(JSON.stringify(cont.response.body)).to.include(`{{ value }}`)})
+        })
+        """,
         "assertStubResponseBodyEquals": ".then(() => {cy.wait('@{{ alias }}').then(cont => {expect(JSON.stringify(cont.response.body)).to.eq(JSON.stringify({{ text }}))})})",
         "assertVariableContains": ".then(() => {expect(`{{ cy_var }}`).to.include(`{{ value }}`)})",
         "assertVariableEquals": ".then(() => {expect(`{{ cy_var }}`).to.eq(`{{ value }}`)})",
@@ -9,6 +14,23 @@ def template_actions():
         "cyLog": ".then(() => {cy.log(`{{ value }}`)})",
         "command": ".then(() => {cy.{{ name }}({{ params }})})",
         "interceptRequest": ".then(() => {cy.intercept({method:'{{ method }}', url: '{{ url }}'}).as('{{ alias }}')})",
+        "interceptGqlRequest": """
+        .then(() => {
+            cy.intercept(
+                {
+                    method:'POST',
+                    url: '{{ url }}'
+                },
+                (req) => {
+                    if (req.body.operationName === `{{ operationName }}`) {
+                        req.alias = `{{ alias }}`
+                    } else {
+                        req.alias = 'noOperationNameRequests'
+                    }
+                }
+            )
+        })
+        """,
         "script": ".then(() => { {{ js }} })",
         "reload": ".then(() => {cy.reload()})",
         "session": """
@@ -143,6 +165,34 @@ def template_actions():
         """
         .then(() => {
             cy.get('@{{ alias }}').its('body').should('have.nested.property', `{{ nestedProperty }}`, `{{ value }}`)
+        })
+        """,
+
+        "assertGqlResponseBodyHasProperty":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its('response.body').should('have.property', `{{ property }}`)
+        })
+        """,
+
+        "assertGqlResponseBodyPropertyHasValue":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its('response.body').should('have.property', `{{ property }}`, `{{ value }}`)
+        })
+        """,
+
+        "assertGqlResponseBodyHasNestedProperty":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its('response.body').should('have.nested.property', `{{ nestedProperty }}`)
+        })
+        """,
+
+        "assertGqlResponseBodyNestedPropertyHasValue":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its('response.body').should('have.nested.property', `{{ nestedProperty }}`, `{{ value }}`)
         })
         """,
 

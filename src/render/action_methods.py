@@ -62,6 +62,14 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def interceptGqlRequest(template, args):
+        return template.render(
+            url=args["url"],
+            operationName=args["operationName"],
+            alias=args["alias"] if args.get("alias") else "${req.body.operationName}"
+        ) + "\n"
+
+    @staticmethod
     def script(template, args):
         return template.render(
             js=args["js"]
@@ -536,6 +544,36 @@ class ActionMethods:
 
     @staticmethod
     def assertResponseBodyNestedPropertyHasValue(template, args):
+        return template.render(
+            alias=args["alias"],
+            nestedProperty=args["nestedProperty"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertGqlResponseBodyHasProperty(template, args):
+        return template.render(
+            alias=args["alias"],
+            property=args["property"]
+        ) + "\n"
+
+    @staticmethod
+    def assertGqlResponseBodyPropertyHasValue(template, args):
+        return template.render(
+            alias=args["alias"],
+            property=args["property"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertGqlResponseBodyHasNestedProperty(template, args):
+        return template.render(
+            alias=args["alias"],
+            nestedProperty=args["nestedProperty"]
+        ) + "\n"
+
+    @staticmethod
+    def assertGqlResponseBodyNestedPropertyHasValue(template, args):
         return template.render(
             alias=args["alias"],
             nestedProperty=args["nestedProperty"],
