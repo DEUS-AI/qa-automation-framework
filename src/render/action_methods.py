@@ -311,6 +311,61 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def assertElementHasCssProperty(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            property=args["property"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementIndexHasCssProperty(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            index=args["index"],
+            property=args["property"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementCssPropertyHasValue(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            property=args["property"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementIndexCssPropertyHasValue(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            index=args["index"],
+            property=args["property"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementCssPropertyContainsValue(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            property=args["property"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementIndexCssPropertyContainsValue(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            index=args["index"],
+            property=args["property"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
     def assertElementLength(template, args):
         return template.render(
             locator_type=args["element"]["type"],
