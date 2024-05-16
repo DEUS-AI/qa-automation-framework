@@ -100,6 +100,35 @@ def template_actions():
         "assertFileContentContainsText": ".then(() => {cy.fixture(`{{ file }}`).then(cont => {expect(JSON.stringify(cont)).to.contain(`{{ value }}`) })})",
         "assertFileContentContainsElementText": ".then(() => {cy.fixture(`{{ file }}`).then(cont => { cy.{{ locator_type }}('{{ locator }}').then($el => { expect(JSON.stringify(cont)).to.contain($el.text()) }) })})",
         "assertFileContentEqualsTextElement": ".then(() => {cy.fixture(`{{ file }}`).then(cont => {cy.{{ locator_type }}('{{ locator }}').should('have.text', cont)})})",
+        "assertElementHasPseudoElement": """.then(() => {
+            cy.{{ locator_type }}('{{ locator  }}').within(($el) => {
+                cy.window().then((win) => {
+                const before = win.getComputedStyle($el[0], '{{ pseudo_element }}')
+                expect(before === 'undefined').to.not.be.true
+                })
+            })
+        })
+        """,
+        "assertElementPseudoElementHasProperty": """.then(() => {
+            cy.{{ locator_type }}('{{ locator  }}').within(($el) => {
+                cy.window().then((win) => {
+                const before = win.getComputedStyle($el[0], '{{ pseudo_element }}')
+                const prop = before.getPropertyValue('{{ property }}')
+                expect(prop === 'undefined').to.not.be.true
+                })
+            })
+        })
+        """,
+        "assertElementPseudoElementPropertyHasValue": """.then(() => {
+            cy.{{ locator_type }}('{{ locator  }}').within(($el) => {
+                cy.window().then((win) => {
+                const before = win.getComputedStyle($el[0], '{{ pseudo_element }}')
+                const prop = before.getPropertyValue('{{ property }}')
+                expect(prop).to.equal(`{{ value }}`)
+                })
+            })
+        })
+        """,
         "clearAllLocalStorage": ".then(() => {cy.clearAllLocalStorage()})",
         "clearAllSessionStorage": ".then(() => {cy.clearAllSessionStorage()})",
         "clearField": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').clear()})",

@@ -424,6 +424,33 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def assertElementHasPseudoElement(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            pseudo_element=args["pseudoElement"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementPseudoElementHasProperty(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            pseudo_element=args["pseudoElement"],
+            property=args["property"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementPseudoElementPropertyHasValue(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            pseudo_element=args["pseudoElement"],
+            property=args["property"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
     def clearAllLocalStorage(template):
         return template.render() + "\n"
 
