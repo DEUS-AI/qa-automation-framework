@@ -6,8 +6,8 @@ def parser(actions):
     Receives the yaml actions as a list and returns them in the same data type and ready to be rendered with a cypress jinja template.
     '''
     rendered_action_list = ""
-    prev_action_name = ""
-    remove_callback_from = {"setLocalStorage", "setSessionStorage"}
+    # prev_action_name = ""
+    # remove_callback_from = {"setLocalStorage", "setSessionStorage"}
     locators = load_all_locators_files()
     res_locators = resolve_locators(locators)
     action_renderer = ActionRenderer()
@@ -18,12 +18,12 @@ def parser(actions):
 
         rendered_action = "\t\t" + action_renderer.render_action(action_name, action_args, res_locators)
 
-        if index == 0 or any(action in remove_callback_from for action in {action_name, prev_action_name}): 
+        if index == 0: # or any(action in remove_callback_from for action in {action_name, prev_action_name}): -- Use this if need to remove specific callback from specific actions
             rendered_action = rendered_action.replace(".then(() => {", "", 1).rsplit("})", 1)[0]
             rendered_action = rendered_action.replace("\t", "", 1) + "\n"
 
         rendered_action_list = rendered_action_list + rendered_action
-        prev_action_name = action_name
+        # prev_action_name = action_name
 
         if "throw new Error" not in rendered_action_list: continue 
         else: break
