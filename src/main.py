@@ -21,6 +21,9 @@ for acceptance_file in acceptance_files:
     if "Tags" in acceptance_file["TestSuite"].keys(): 
         test_map["suite_tags"] = acceptance_file["TestSuite"]["Tags"]
     
+    if "Retries" in acceptance_file["TestSuite"].keys():
+        test_map["suite_retries"] = acceptance_file["TestSuite"]["Retries"]
+    
     render.tests.cypress(test_map, "start_suite")
 
     if "Hooks" in acceptance_file.keys():
@@ -46,6 +49,10 @@ for acceptance_file in acceptance_files:
         if "test_tags" in test_map: del test_map["test_tags"]
         if "Tags" in test.keys():
             test_map["test_tags"] = test["Tags"]
+        
+        if "test_retries" in test_map: del test_map["test_retries"]
+        if "Retries" in test.keys():
+            test_map["test_retries"] = test["Retries"]
         
         test_map["test_steps"] = parse.actions.parser(test["Actions"])
 

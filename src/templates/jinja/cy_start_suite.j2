@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-describe('{{ suite_title }}',{{ suite_tags }} () => {
+describe('{{ suite_title }}', {%+ if suite_tags or suite_retries -%}
+{ tags: {{ suite_tags }}{% if suite_retries %}, retries: {{ suite_retries }}{% endif %} },
+{%- endif +%} () => {
   

@@ -8,7 +8,7 @@ module.exports = defineConfig({
     charts: true,
     embeddedScreenshots: true,
     inlineAssets: false,
-    saveAllAttempts: false,
+    saveAllAttempts: true,
     overwrite: false,
     removeJsonsFolderAfterMerge: false
   },

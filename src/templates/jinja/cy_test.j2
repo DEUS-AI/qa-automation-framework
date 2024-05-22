@@ -1,6 +1,8 @@
 
 
-  it('{{ test_title }}',{{ test_tags }} () => {
+  it('{{ test_title }}', {%+ if test_tags or test_retries -%}
+  { tags: {{ test_tags }}{% if test_retries %}, retries: {{ test_retries }}{% endif %} }, 
+{%- endif +%} () => {
 
 {{ test_steps }} 
   })
