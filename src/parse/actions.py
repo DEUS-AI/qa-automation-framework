@@ -2,7 +2,7 @@ from render.action import ActionRenderer
 from parse.locators import resolve_locators, load_all_locators_files
 from typing import List, Union, Dict
 
-REMOVE_CALLBACK_FROM = ["setLocalStorage", "setSessionStorage"]
+REMOVE_CALLBACK_FROM = ["setLocalStorage", "setSessionStorage", "setVariable", "assertVariableContains", "assertVariableEquals"]
 THEN_CALLBACK_START = ".then(() => {"
 THEN_CALLBACK_END = "})"
 
