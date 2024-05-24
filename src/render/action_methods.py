@@ -177,32 +177,32 @@ class ActionMethods:
     def assertElementExists(template, args):
         return template.render(
             locator_type=args["element"]["type"],
-            timeout=args["timeout"] if args.get("timeout") else 4000,
-            locator=args["element"]["locator"]
+            locator=args["element"]["locator"],
+            timeout=args["timeout"] if args.get("timeout") else 4000
         ) + "\n"
 
     @staticmethod
     def assertElementNotExists(template, args):
         return template.render(
             locator_type=args["element"]["type"],
-            timeout=args["timeout"] if args.get("timeout") else 4000,
-            locator=args["element"]["locator"]
+            locator=args["element"]["locator"],
+            timeout=args["timeout"] if args.get("timeout") else 4000
         ) + "\n"
 
     @staticmethod
     def assertElementIsVisible(template, args):
         return template.render(
             locator_type=args["element"]["type"],
-            timeout=args["timeout"] if args.get("timeout") else 4000,
-            locator=args["element"]["locator"]
+            locator=args["element"]["locator"],
+            timeout=args["timeout"] if args.get("timeout") else 4000
         ) + "\n"
 
     @staticmethod
     def assertElementIsNotVisible(template, args):
         return template.render(
             locator_type=args["element"]["type"],
-            timeout=args["timeout"] if args.get("timeout") else 4000,
-            locator=args["element"]["locator"]
+            locator=args["element"]["locator"],
+            timeout=args["timeout"] if args.get("timeout") else 4000
         ) + "\n"
 
     @staticmethod
@@ -210,6 +210,16 @@ class ActionMethods:
         return template.render(
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
+            timeout=args["timeout"] if args.get("timeout") else 4000,
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementNotHaveText(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            timeout=args["timeout"] if args.get("timeout") else 4000,
             value=args["value"]
         ) + "\n"
 
@@ -226,6 +236,17 @@ class ActionMethods:
         return template.render(
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
+            timeout=args["timeout"] if args.get("timeout") else 4000,
+            index=args["index"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertElementIndexNotHaveText(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            timeout=args["timeout"] if args.get("timeout") else 4000,
             index=args["index"],
             value=args["value"]
         ) + "\n"
@@ -235,6 +256,7 @@ class ActionMethods:
         return template.render(
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
+            timeout=args["timeout"] if args.get("timeout") else 4000,
             value=args["value"]
         ) + "\n"
 
@@ -251,6 +273,7 @@ class ActionMethods:
         return template.render(
             locator_type=args["element"]["type"],
             locator=args["element"]["locator"],
+            timeout=args["timeout"] if args.get("timeout") else 4000,
             index=args["index"],
             value=args["value"]
         ) + "\n"
@@ -518,6 +541,13 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def rightClick(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"] 
+        ) + "\n"
+
+    @staticmethod
     def removeElementTargetAttr(template, args):
         return template.render(
             locator_type=args["element"]["type"],
@@ -601,8 +631,19 @@ class ActionMethods:
             locator=args["element"]["locator"],
             value=args["value"]
         ) + "\n"
-
     
+    @staticmethod
+    def uploadFile(template, args):
+        return template.render(
+            locator_type=args["element"]["type"],
+            locator=args["element"]["locator"],
+            file=args['file'],
+            action=args["action"] if args.get("action") else "select",
+            force=args["force"] if args.get("force") else "true",
+            timeout=args["timeout"] if args.get("timeout") else "4000",
+            wait_for_animations=args["waitForAnimations"] if args.get("waitForAnimations") else "true"
+        ) + "\n"
+
     # api actions
     @staticmethod
     def assertResponseStatusCode(template, args):

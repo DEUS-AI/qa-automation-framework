@@ -74,12 +74,14 @@ def template_actions():
         "assertElementNotExists": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).should('not.exist')})",
         "assertElementIsVisible": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).should('be.visible')})",
         "assertElementIsNotVisible": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).should('not.be.visible')})",
-        "assertElementHasText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.text', `{{ value }}`)})",
+        "assertElementHasText": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).should('have.text', `{{ value }}`)})",
+        "assertElementNotHaveText": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).should('not.have.text', `{{ value }}`)})",
         "assertEachElementHasText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').as('els')\ncy.get('@els').each($el => {cy.wrap($el).should('have.text', `{{ value }}`)})})",
-        "assertElementIndexHasText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').eq({{ index }}).should('have.text', `{{ value }}`)})",
-        "assertElementContainsText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('include.text', `{{ value }}`)})",
+        "assertElementIndexHasText": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).eq({{ index }}).should('have.text', `{{ value }}`)})",
+        "assertElementIndexNotHaveText": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).eq({{ index }}).should('not.have.text', `{{ value }}`)})",
+        "assertElementContainsText": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).should('include.text', `{{ value }}`)})",
         "assertEachElementContainsText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').as('els')\ncy.get('@els').each($el => {cy.wrap($el).should('include.text', `{{ value }}`)})})",
-        "assertElementIndexContainsText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').eq({{ index }}).should('include.text', `{{ value }}`)})",
+        "assertElementIndexContainsText": ".then(() => {cy.{{ locator_type }}('{{ locator }}', { timeout: {{ timeout }} }).eq({{ index }}).should('include.text', `{{ value }}`)})",
         "assertElementHasAttribute": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.attr', `{{ attr }}`)})",
         "assertElementIndexHasAttribute": ".then(() => {cy.{{ locator_type }}('{{ locator }}').eq({{ index }}).should('have.attr', `{{ attr }}`)})",
         "assertElementAttributeHasValue": ".then(() => {cy.{{ locator_type }}('{{ locator }}').should('have.attr', `{{ attr }}`, `{{ value }}`)})",
@@ -140,6 +142,7 @@ def template_actions():
         "navigateForward": ".then(() => {cy.go('forward')})",
         "navigateBack": ".then(() => {cy.go('back')})",
         "pressKey": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').type(`{{ key }}`)})",
+        "rightClick": ".then(() => {cy.{{ locator_type }}('{{ locator }}').rightclick()})",
         "removeElementTargetAttr": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').invoke('removeAttr', 'target')})",
         "selectByIndex": ".then(() => {cy.{{ locator_type }}('{{ locator }}').select({{ index }})})",
         "selectByText": ".then(() => {cy.{{ locator_type }}('{{ locator }}').select('{{ text }}')})",
@@ -151,6 +154,7 @@ def template_actions():
         "scrollIntoView": ".then(() => {cy.{{ locator_type }}('{{ locator }}').scrollIntoView()})",
         "type": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').type(`{{ value }}`, { log: {{ log }} })})",
         "typeAndPressEnter": ".then(() => {cy.{{ locator_type }}('{{ locator  }}').type(`{{ value }}{enter}`)})",
+        "uploadFile": ".then(() => {cy.fixture(`{{ file }}`, null).as('myFixture')\n\t\tcy.{{ locator_type }}('{{ locator }}').selectFile('@myFixture', { action: '{{ action }}' ,force: {{ force }}, timeout: {{ timeout }}, waitForAnimations: {{ wait_for_animations }} })})"
     }
 
     api = {
