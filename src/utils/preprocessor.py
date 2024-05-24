@@ -122,9 +122,10 @@ def process_and_write_import_statement_for_yml_command_files(commands_path):
             fname = fname.replace(".yml",".js")
             data = yaml.safe_load(stream)
 
-            for command in data:
 
-                with open(f"./{commands_path}/{fname}", "a", encoding="utf-8") as nf:
+            with open(f"./{commands_path}/{fname}", "a", encoding="utf-8") as nf:
+                nf.write("import { faker } from '@faker-js/faker'\n\n")
+                for command in data:
                         params = ','.join(data[command].get("parameters")) if data[command].get("parameters") is not None else ""
 
                         nf.write(template
