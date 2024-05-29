@@ -190,6 +190,13 @@ def template_actions():
         })
         """,
 
+        "assertResponseBodyPropertyContainsValue":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').then(res => { expect(res.body{{ property }}).to.include(`{{ value }}`) })
+        })
+        """,
+
         "assertResponseBodyPropertyHasNumericValue":
         """
         .then(() => {
@@ -208,6 +215,13 @@ def template_actions():
         """
         .then(() => {
             cy.get('@{{ alias }}').its('body').should('have.nested.property', `{{ nestedProperty }}`, `{{ value }}`)
+        })
+        """,
+
+        "assertResponseBodyNestedPropertyContainsValue":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').then(res => { expect(res.body{{ nestedProperty }}).to.include(`{{ value }}`) })
         })
         """,
 
