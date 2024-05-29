@@ -190,6 +190,13 @@ def template_actions():
         })
         """,
 
+        "assertResponseBodyPropertyHasNumericValue":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its('body').should('have.property', `{{ property }}`, {{ value }})
+        })
+        """,
+
         "assertResponseBodyHasNestedProperty":
         """
         .then(() => {
@@ -201,6 +208,62 @@ def template_actions():
         """
         .then(() => {
             cy.get('@{{ alias }}').its('body').should('have.nested.property', `{{ nestedProperty }}`, `{{ value }}`)
+        })
+        """,
+
+        "assertResponseBodyNestedPropertyHasNumericValue":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its('body').should('have.nested.property', `{{ nestedProperty }}`, {{ value }})
+        })
+        """,
+
+        "assertResponseBodyPropertyIsEmpty":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('be.empty')
+        })
+        """,
+
+        "assertResponseBodyPropertyIsNotEmpty":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('not.be.empty')
+        })
+        """,
+
+        "assertResponseBodyPropertyIsNull":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('be.null')
+        })
+        """,
+
+        "assertResponseBodyPropertyIsNotNull":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('not.be.null')
+        })
+        """,
+
+        "assertResponseBodyPropertyType":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('be.a', `{{ type }}`)
+        })
+        """,
+
+        "assertResponseBodyPropertyIsNotType":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('not.be.a', `{{ type }}`)
+        })
+        """,
+
+        "assertResponseBodyPropertyLength":
+        """
+        .then(() => {
+            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('have.length', `{{ length }}`)
         })
         """,
 
