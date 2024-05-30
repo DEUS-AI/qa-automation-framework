@@ -678,7 +678,7 @@ class ActionMethods:
     def assertResponseBodyPropertyContainsValue(template, args):
         return template.render(
             alias=args["alias"],
-            property=process_request_property_path(args["property"]),
+            property=args["property"],
             value=args["value"]
         ) + "\n"
 
@@ -686,7 +686,7 @@ class ActionMethods:
     def assertResponseBodyPropertyHasNumericValue(template, args):
         return template.render(
             alias=args["alias"],
-            property=process_request_property_path(args["property"]),
+            property=args["property"],
             value=args["value"]
         ) + "\n"
 
