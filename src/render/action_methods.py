@@ -723,35 +723,35 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
-    def assertResponseBodyPropertyIsEmpty(template, args):
+    def assertResponseBodyPropertyValueIsEmpty(template, args):
         return template.render(
             alias=args["alias"],
             path_to_property=process_request_property_path(args["propertyPath"])
         ) + "\n"
 
     @staticmethod
-    def assertResponseBodyPropertyIsNotEmpty(template, args):
+    def assertResponseBodyPropertyValueIsNotEmpty(template, args):
         return template.render(
             alias=args["alias"],
             path_to_property=process_request_property_path(args["propertyPath"])
         ) + "\n"
 
     @staticmethod
-    def assertResponseBodyPropertyIsNull(template, args):
+    def assertResponseBodyPropertyValueIsNull(template, args):
         return template.render(
             alias=args["alias"],
             path_to_property=process_request_property_path(args["propertyPath"])
         ) + "\n"
 
     @staticmethod
-    def assertResponseBodyPropertyIsNotNull(template, args):
+    def assertResponseBodyPropertyValueIsNotNull(template, args):
         return template.render(
             alias=args["alias"],
             path_to_property=process_request_property_path(args["propertyPath"])
         ) + "\n"
 
     @staticmethod
-    def assertResponseBodyPropertyType(template, args):
+    def assertResponseBodyPropertyValueType(template, args):
         return template.render(
             alias=args["alias"],
             path_to_property=process_request_property_path(args["propertyPath"]),
@@ -759,7 +759,7 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
-    def assertResponseBodyPropertyIsNotType(template, args):
+    def assertResponseBodyPropertyValueIsNotType(template, args):
         return template.render(
             alias=args["alias"],
             path_to_property=process_request_property_path(args["propertyPath"]),
@@ -767,11 +767,90 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
-    def assertResponseBodyPropertyLength(template, args):
+    def assertResponseBodyPropertyValueLength(template, args):
         return template.render(
             alias=args["alias"],
             path_to_property=process_request_property_path(args["propertyPath"]),
             length = args["length"]
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyPropertyValueIsGreaterThan(template, args):
+        return template.render(
+            alias=args["alias"],
+            path_to_property=process_request_property_path(args["property"]),
+            nr = args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyPropertyValueIsAtLeast(template, args):
+        return template.render(
+            alias=args["alias"],
+            path_to_property=process_request_property_path(args["property"]),
+            nr = args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyPropertyValueIsLessThan(template, args):
+        return template.render(
+            alias=args["alias"],
+            path_to_property=process_request_property_path(args["property"]),
+            nr = args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyPropertyValueIsWithin(template, args):
+        return template.render(
+            alias=args["alias"],
+            path_to_property=process_request_property_path(args["property"]),
+            first_nr = args["firstNumber"],
+            second_nr = args["secondNumber"]
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyPropertyValueIsInstanceOf(template, args):
+        return template.render(
+            alias=args["alias"],
+            path_to_property=process_request_property_path(args["property"]),
+            array = args["list"]
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyPropertyValueIsCloseTo(template, args):
+        return template.render(
+            alias=args["alias"],
+            path_to_property=process_request_property_path(args["property"]),
+            first_nr = args["firstNumber"],
+            second_nr = args["secondNumber"]
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyPropertyValueIsOneOf(template, args):
+        return template.render(
+            alias=args["alias"],
+            path_to_property=process_request_property_path(args["property"]),
+            array = args["list"]
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyPropertyValueIsTrue(template, args):
+        return template.render(
+            alias=args["alias"],
+            path_to_property=process_request_property_path(args["property"])
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyPropertyValueIsFalse(template, args):
+        return template.render(
+            alias=args["alias"],
+            path_to_property=process_request_property_path(args["property"])
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyPropertyValueIsUndefined(template, args):
+        return template.render(
+            alias=args["alias"],
+            path_to_property=process_request_property_path(args["property"])
         ) + "\n"
 
     @staticmethod

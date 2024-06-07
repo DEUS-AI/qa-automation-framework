@@ -232,52 +232,122 @@ def template_actions():
         })
         """,
 
-        "assertResponseBodyPropertyIsEmpty":
+        "assertResponseBodyPropertyValueIsEmpty":
         """
         .then(() => {
             cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.empty')
         })
         """,
 
-        "assertResponseBodyPropertyIsNotEmpty":
+        "assertResponseBodyPropertyValueIsNotEmpty":
         """
         .then(() => {
             cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('not.be.empty')
         })
         """,
 
-        "assertResponseBodyPropertyIsNull":
+        "assertResponseBodyPropertyValueIsNull":
         """
         .then(() => {
             cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.null')
         })
         """,
 
-        "assertResponseBodyPropertyIsNotNull":
+        "assertResponseBodyPropertyValueIsNotNull":
         """
         .then(() => {
             cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('not.be.null')
         })
         """,
 
-        "assertResponseBodyPropertyType":
+        "assertResponseBodyPropertyValueType":
         """
         .then(() => {
             cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.a', `{{ type }}`)
         })
         """,
 
-        "assertResponseBodyPropertyIsNotType":
+        "assertResponseBodyPropertyValueIsNotType":
         """
         .then(() => {
             cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('not.be.a', `{{ type }}`)
         })
         """,
 
-        "assertResponseBodyPropertyLength":
+        "assertResponseBodyPropertyValueLength":
         """
         .then(() => {
             cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('have.length', `{{ length }}`)
+        })
+        """,
+
+        "assertResponseBodyPropertyValueIsGreaterThan":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.greaterThan', {{ nr }})
+        })
+        """,
+
+        "assertResponseBodyPropertyValueIsAtLeast":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.at.least', {{ nr }})
+        })
+        """,
+
+        "assertResponseBodyPropertyValueIsLessThan":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.lessThan', {{ nr }})
+        })
+        """,
+
+        "assertResponseBodyPropertyValueIsWithin":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.within', {{ first_nr }}, {{ second_nr }})
+        })
+        """,
+
+        "assertResponseBodyPropertyValueIsInstanceOf":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.instanceOf', {{ array }})
+        })
+        """,
+
+        "assertResponseBodyPropertyValueIsCloseTo":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.closeTo', {{ first_nr }}, {{ second_nr }})
+        })
+        """,
+
+        "assertResponseBodyPropertyValueIsOneOf":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.oneOf', {{ array }})
+        })
+        """,
+
+        "assertResponseBodyPropertyValueIsTrue":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.true')
+        })
+        """,
+
+        "assertResponseBodyPropertyValueIsFalse":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.false')
+        })
+        """,
+
+        "assertResponseBodyPropertyValueIsUndefined":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.undefined')
         })
         """,
 
