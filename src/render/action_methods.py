@@ -50,7 +50,7 @@ class ActionMethods:
     def command(template, args):
         return template.render(
             name=args["name"],
-            params=", ".join(['"{}"'.format(item) for item in args["parameters"]]) if args.get("parameters") else "",
+            arguments=", ".join(['"{}"'.format(item) for item in args["arguments"]]) if args.get("arguments") else "",
         ) + "\n"
 
     @staticmethod

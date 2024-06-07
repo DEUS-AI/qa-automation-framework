@@ -109,6 +109,7 @@ def write_import_statement_for_js_command_files(commands_path):
             message.close()
 
 def process_and_write_import_statement_for_yml_command_files(commands_path):
+    import re
     from parse.actions import parser
 
     template = """
@@ -127,11 +128,14 @@ def process_and_write_import_statement_for_yml_command_files(commands_path):
                 nf.write("import { faker } from '@faker-js/faker'\n\n")
                 for command in data:
                         params = ','.join(data[command].get("parameters")) if data[command].get("parameters") is not None else ""
+                        
+                        pattern = r'(?<!`)\$\{([^}]+)\}(?!`)'
+                        updated_actions = re.sub(pattern, r'`${\1}`', parser(data[command].get("actions")))
 
                         nf.write(template
                             .replace("<<name>>", command)
                             .replace("<<params>>", params)
-                            .replace("<<actions>>", parser(data[command].get("actions")))
+                            .replace("<<actions>>", updated_actions)
                         )
             
             with open("cypress/support/e2e.js", mode="a", encoding="utf-8") as message:

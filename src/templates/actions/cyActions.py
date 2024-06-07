@@ -1,13 +1,13 @@
 def template_actions():
     general = {
         "assertRequestWasCalledGivenTimes": ".then(() => {cy.get('@{{ alias }}.all').then(cont => {expect(cont).to.have.length({{ value }})})})",
-        "assertStubResponseBodyContains": ".then(() => {cy.wait('@{{ alias }}').then(cont => {expect(JSON.stringify(cont.response.body)).to.include(`{{ value }}`)})})",
-        "assertStubResponseBodyEquals": ".then(() => {cy.wait('@{{ alias }}').then(cont => {expect(JSON.stringify(cont.response.body)).to.eq(JSON.stringify({{ text }}))})})",
+        "assertStubResponseBodyContains": ".then(() => {cy.wait(`@{{ alias }}`).then(cont => {expect(JSON.stringify(cont.response.body)).to.include(`{{ value }}`)})})",
+        "assertStubResponseBodyEquals": ".then(() => {cy.wait(`@{{ alias }}`).then(cont => {expect(JSON.stringify(cont.response.body)).to.eq(JSON.stringify({{ text }}))})})",
         "assertVariableContains": ".then(() => {expect(`{{ cy_var }}`).to.include(`{{ value }}`)})",
         "assertVariableEquals": ".then(() => {expect(`{{ cy_var }}`).to.eq(`{{ value }}`)})",
         "catchExceptions": ".then(() => {Cypress.on('uncaught:exception', (err, runnable) => {return false})})",
         "cyLog": ".then(() => {cy.log(`{{ value }}`)})",
-        "command": ".then(() => {cy.{{ name }}({{ params }})})",
+        "command": ".then(() => {cy.{{ name }}({{ arguments }})})",
         "interceptRequest": ".then(() => {cy.intercept({method:'{{ method }}', url: `{{ url }}`}).as('{{ alias }}')})",
         "interceptGqlRequest": """
         .then(() => {
@@ -161,8 +161,8 @@ def template_actions():
         "assertResponseStatusCode":
         """
         .then(() => {
-            cy.get('@{{ alias }}').then( response => {
-                expect(response.status).to.eq({{ statusCode }})
+            cy.get(`@{{ alias }}`).then( response => {
+                expect(response.status).to.eq(Number({{ statusCode }}))
             })
         })
         """,
@@ -170,7 +170,7 @@ def template_actions():
         "assertResponseBodyContains":
         """
         .then(() => {
-            cy.get('@{{ alias }}').then(response => {
+            cy.get(`@{{ alias }}`).then(response => {
                 expect(JSON.stringify(response.body)).to.include(`{{ value }}`) 
             })
         })
@@ -179,168 +179,168 @@ def template_actions():
         "assertResponseBodyHasProperty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('body').should('have.property', `{{ property }}`)
+            cy.get(`@{{ alias }}`).its('body').should('have.property', `{{ property }}`)
         })
         """,
 
         "assertResponseBodyPropertyHasValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('body').should('have.property', `{{ property }}`, `{{ value }}`)
+            cy.get(`@{{ alias }}`).its('body').should('have.property', `{{ property }}`, `{{ value }}`)
         })
         """,
 
         "assertResponseBodyPropertyContainsValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').then(res => { expect(res.body{{ property }}).to.include(`{{ value }}`) })
+            cy.get(`@{{ alias }}`).then(res => { expect(res.body{{ property }}).to.include(`{{ value }}`) })
         })
         """,
 
         "assertResponseBodyPropertyHasNumericValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('body').should('have.property', `{{ property }}`, {{ value }})
+            cy.get(`@{{ alias }}`).its('body').should('have.property', `{{ property }}`, Number({{ value }}))
         })
         """,
 
         "assertResponseBodyHasNestedProperty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('body').should('have.nested.property', `{{ nestedProperty }}`)
+            cy.get(`@{{ alias }}`).its('body').should('have.nested.property', `{{ nestedProperty }}`)
         })
         """,
 
         "assertResponseBodyNestedPropertyHasValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('body').should('have.nested.property', `{{ nestedProperty }}`, `{{ value }}`)
+            cy.get(`@{{ alias }}`).its('body').should('have.nested.property', `{{ nestedProperty }}`, `{{ value }}`)
         })
         """,
 
         "assertResponseBodyNestedPropertyContainsValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').then(res => { expect(res.body{{ nestedProperty }}).to.include(`{{ value }}`) })
+            cy.get(`@{{ alias }}`).then(res => { expect(res.body{{ nestedProperty }}).to.include(`{{ value }}`) })
         })
         """,
 
         "assertResponseBodyNestedPropertyHasNumericValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('body').should('have.nested.property', `{{ nestedProperty }}`, {{ value }})
+            cy.get(`@{{ alias }}`).its('body').should('have.nested.property', `{{ nestedProperty }}`, Number({{ value }}))
         })
         """,
 
         "assertResponseBodyPropertyIsEmpty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('be.empty')
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.empty')
         })
         """,
 
         "assertResponseBodyPropertyIsNotEmpty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('not.be.empty')
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('not.be.empty')
         })
         """,
 
         "assertResponseBodyPropertyIsNull":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('be.null')
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.null')
         })
         """,
 
         "assertResponseBodyPropertyIsNotNull":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('not.be.null')
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('not.be.null')
         })
         """,
 
         "assertResponseBodyPropertyType":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('be.a', `{{ type }}`)
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('be.a', `{{ type }}`)
         })
         """,
 
         "assertResponseBodyPropertyIsNotType":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('not.be.a', `{{ type }}`)
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('not.be.a', `{{ type }}`)
         })
         """,
 
         "assertResponseBodyPropertyLength":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its(`body{{ path_to_property }}`).should('have.length', `{{ length }}`)
+            cy.get(`@{{ alias }}`).its(`body{{ path_to_property }}`).should('have.length', `{{ length }}`)
         })
         """,
 
         "assertGqlResponseBodyHasProperty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('response.body').should('have.property', `{{ property }}`)
+            cy.get(`@{{ alias }}`).its('response.body').should('have.property', `{{ property }}`)
         })
         """,
 
         "assertGqlResponseBodyNotHaveProperty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('response.body').should('not.have.property', `{{ property }}`)
+            cy.get(`@{{ alias }}`).its('response.body').should('not.have.property', `{{ property }}`)
         })
         """,
 
         "assertGqlResponseBodyPropertyHasValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('response.body').should('have.property', `{{ property }}`, `{{ value }}`)
+            cy.get(`@{{ alias }}`).its('response.body').should('have.property', `{{ property }}`, `{{ value }}`)
         })
         """,
 
         "assertGqlResponseBodyPropertyNotHaveValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('response.body').should('have.property', `{{ property }}`).should('not.eq', `{{ value }}`)
+            cy.get(`@{{ alias }}`).its('response.body').should('have.property', `{{ property }}`).should('not.eq', `{{ value }}`)
         })
         """,
 
         "assertGqlResponseBodyHasNestedProperty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('response.body').should('have.nested.property', `{{ nestedProperty }}`)
+            cy.get(`@{{ alias }}`).its('response.body').should('have.nested.property', `{{ nestedProperty }}`)
         })
         """,
 
         "assertGqlResponseBodyNotHaveNestedProperty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('response.body').should('not.have.nested.property', `{{ nestedProperty }}`)
+            cy.get(`@{{ alias }}`).its('response.body').should('not.have.nested.property', `{{ nestedProperty }}`)
         })
         """,
 
         "assertGqlResponseBodyNestedPropertyHasValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('response.body').should('have.nested.property', `{{ nestedProperty }}`, `{{ value }}`)
+            cy.get(`@{{ alias }}`).its('response.body').should('have.nested.property', `{{ nestedProperty }}`, `{{ value }}`)
         })
         """,
 
         "assertGqlResponseBodyNestedPropertyNotHaveValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('response.body').should('have.nested.property', `{{ nestedProperty }}`).should('not.eq', `{{ value }}`)
+            cy.get(`@{{ alias }}`).its('response.body').should('have.nested.property', `{{ nestedProperty }}`).should('not.eq', `{{ value }}`)
         })
         """,
 
         "assertResponseHeadersContains":
         """
         .then(() => {
-            cy.get('@{{ alias }}').then(response => {
+            cy.get(`@{{ alias }}`).then(response => {
                 expect(JSON.stringify(response.headers)).to.include(`{{ value }}`) 
             })
         })
@@ -349,14 +349,14 @@ def template_actions():
         "assertResponseHeadersHasProperty":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('headers').should('have.property', `{{ property }}`)
+            cy.get(`@{{ alias }}`).its('headers').should('have.property', `{{ property }}`)
         })
         """,
 
         "assertResponseHeadersPropertyHasValue":
         """
         .then(() => {
-            cy.get('@{{ alias }}').its('headers').should('have.property', `{{ property }}`, `{{ value }}`)
+            cy.get(`@{{ alias }}`).its('headers').should('have.property', `{{ property }}`, `{{ value }}`)
         })
         """,
 
@@ -478,7 +478,7 @@ def template_actions():
         "setResponseAsVariable": 
         """
         .then(() => {
-            cy.get('@{{ alias }}').then( response => {
+            cy.get(`@{{ alias }}`).then( response => {
                 Cypress.env('{{ cy_var }}', JSON.stringify(response))
             })
         })
@@ -487,7 +487,7 @@ def template_actions():
         "setResponseBodyAsVariable": 
         """
         .then(() => {
-            cy.get('@{{ alias }}').then( response => {
+            cy.get(`@{{ alias }}`).then( response => {
                 Cypress.env('{{ cy_var }}', JSON.stringify(response.body))
             })
         })
@@ -496,7 +496,7 @@ def template_actions():
         "setResponseBodyPropertyValueAsVariable": 
         """
         .then(() => {
-            cy.get('@{{ alias }}').then( response => {
+            cy.get(`@{{ alias }}`).then( response => {
                 Cypress.env('{{ cy_var }}', response.body{{ path_to_property }})
             })
         })
@@ -505,7 +505,7 @@ def template_actions():
         "setResponseHeadersAsVariable": 
         """
         .then(() => {
-            cy.get('@{{ alias }}').then( response => {
+            cy.get(`@{{ alias }}`).then( response => {
                 Cypress.env('{{ cy_var }}', JSON.stringify(response.headers))
             })
         })
@@ -514,7 +514,7 @@ def template_actions():
         "setResponseHeadersPropertyValueAsVariable": 
         """
         .then(() => {
-            cy.get('@{{ alias }}').then( response => {
+            cy.get(`@{{ alias }}`).then( response => {
                 Cypress.env('{{ cy_var }}', response.headers{{ path_to_property }})
             })
         })
