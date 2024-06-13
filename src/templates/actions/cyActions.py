@@ -190,7 +190,7 @@ def template_actions():
         })
         """,
 
-        "assertResponseBodyPropertyHasValue":
+        "assertResponseBodyPropertyNotHaveValue":
         """
         .then(() => {
             cy.get(`@{{ alias }}`).its('body').should('have.property', `{{ property }}`).and('not.eq', `{{ value }}`)
