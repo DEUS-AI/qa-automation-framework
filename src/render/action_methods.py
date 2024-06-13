@@ -675,6 +675,14 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def assertResponseBodyPropertyNotHaveValue(template, args):
+        return template.render(
+            alias=args["alias"],
+            property=args["property"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
     def assertResponseBodyPropertyContainsValue(template, args):
         return template.render(
             alias=args["alias"],
@@ -700,6 +708,14 @@ class ActionMethods:
 
     @staticmethod
     def assertResponseBodyNestedPropertyHasValue(template, args):
+        return template.render(
+            alias=args["alias"],
+            nestedProperty=args["nestedProperty"],
+            value=args["value"]
+        ) + "\n"
+
+    @staticmethod
+    def assertResponseBodyNestedPropertyNotHaveValue(template, args):
         return template.render(
             alias=args["alias"],
             nestedProperty=args["nestedProperty"],

@@ -162,7 +162,7 @@ def template_actions():
         """
         .then(() => {
             cy.get(`@{{ alias }}`).then( response => {
-                expect(response.status).to.eq(Number({{ statusCode }}))
+                expect(response.status).to.eq(Number(`{{ statusCode }}`))
             })
         })
         """,
@@ -190,6 +190,13 @@ def template_actions():
         })
         """,
 
+        "assertResponseBodyPropertyHasValue":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its('body').should('have.property', `{{ property }}`).and('not.eq', `{{ value }}`)
+        })
+        """,
+
         "assertResponseBodyPropertyContainsValue":
         """
         .then(() => {
@@ -200,7 +207,7 @@ def template_actions():
         "assertResponseBodyPropertyHasNumericValue":
         """
         .then(() => {
-            cy.get(`@{{ alias }}`).its('body').should('have.property', `{{ property }}`, Number({{ value }}))
+            cy.get(`@{{ alias }}`).its('body').should('have.property', `{{ property }}`, Number(`{{ value }}`))
         })
         """,
 
@@ -218,6 +225,13 @@ def template_actions():
         })
         """,
 
+        "assertResponseBodyNestedPropertyNotHaveValue":
+        """
+        .then(() => {
+            cy.get(`@{{ alias }}`).its('body').should('have.nested.property', `{{ nestedProperty }}`).and('not.eq', `{{ value }}`)
+        })
+        """,
+
         "assertResponseBodyNestedPropertyContainsValue":
         """
         .then(() => {
@@ -228,7 +242,7 @@ def template_actions():
         "assertResponseBodyNestedPropertyHasNumericValue":
         """
         .then(() => {
-            cy.get(`@{{ alias }}`).its('body').should('have.nested.property', `{{ nestedProperty }}`, Number({{ value }}))
+            cy.get(`@{{ alias }}`).its('body').should('have.nested.property', `{{ nestedProperty }}`, Number(`{{ value }}`))
         })
         """,
 
