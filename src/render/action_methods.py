@@ -978,11 +978,12 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
-    def sendPostRequestWithPayloadFromFile(template, args):
+    def sendRequestWithPayloadFromFile(template, args):
         if "headers" in args.keys():
             res_headers = process_request_obj_inputs(args["headers"])
 
         return template.render(
+            method=args["method"] if args.get("method") else "POST",
             url=args["url"],
             alias=args["alias"],
             body=args["body"],

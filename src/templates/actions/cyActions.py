@@ -468,12 +468,12 @@ def template_actions():
         })
         """,
 
-        "sendPostRequestWithPayloadFromFile": 
+        "sendRequestWithPayloadFromFile": 
         """
         .then(() => {
             cy.fixture('{{ body }}').then(payload => {        
                 cy.request({
-                    method: 'POST',
+                    method: '{{ method }}',
                     url: `{{ url }}`,
                     auth: `{{ auth }}`,
                     body: payload,
@@ -532,7 +532,7 @@ def template_actions():
             })
         })
         """,
-        
+
         "sendGraphqlRequest": 
         """
         .then(() => {
