@@ -8,6 +8,7 @@ def template_actions():
         "catchExceptions": ".then(() => {Cypress.on('uncaught:exception', (err, runnable) => {return false})})",
         "cyLog": ".then(() => {cy.log(`{{ value }}`)})",
         "command": ".then(() => {cy.{{ name }}({{ arguments }})})",
+        "jsCommand": ".then(() => {cy.{{ name }}({{ arguments }})})",
         "interceptRequest": ".then(() => {cy.intercept({method:'{{ method }}', url: `{{ url }}`}).as('{{ alias }}')})",
         "interceptGqlRequest": """
         .then(() => {

@@ -47,6 +47,13 @@ class ActionMethods:
         ) + "\n"
 
     @staticmethod
+    def jsCommand(template, args):
+        return template.render(
+            name=args["name"],
+            arguments={key: value for d in args["arguments"] for key, value in d.items()} if args.get("arguments") else "",
+        ) + "\n"
+
+    @staticmethod
     def command(template, args):
         return template.render(
             name=args["name"],
@@ -1091,6 +1098,9 @@ class ActionMethods:
 
 # Util functions
 def process_request_obj_inputs(obj):
+    if isinstance(obj, str):
+        return f"`{obj}`"
+
     temp = {}
     for k,v in obj.items():
         temp[k] = f"`{v}`"
