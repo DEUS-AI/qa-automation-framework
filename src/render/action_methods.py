@@ -1,3 +1,5 @@
+import json
+
 class ActionMethods:
 
     # general actions
@@ -967,7 +969,7 @@ class ActionMethods:
             res_headers = process_request_obj_inputs(args["headers"])
         
         if "body" in args.keys():
-            res_body = process_request_obj_inputs(args["body"])
+            res_body = json.dumps(process_request_obj_inputs(args["body"]))
 
         method = args["method"].upper()
 
@@ -991,6 +993,7 @@ class ActionMethods:
         # Only include body if the method is not GET
         if method != "GET" :
             render_args["body"] =res_body if args.get("body") else {},
+
 
         return template.render(**render_args) + "\n"
 
