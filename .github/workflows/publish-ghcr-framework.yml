@@ -10,6 +10,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build and push the image
         run: |
-          docker login --username JoavFernandes --password ${{ secrets.JF_GH_PAT }} ghcr.io
+          docker login --username XesGaDeus --password ${{ secrets.JF_GH_PAT }} ghcr.io
           docker build . --tag ghcr.io/deus-ai/qa-automation-framework_amd64:latest
           docker push ghcr.io/deus-ai/qa-automation-framework_amd64:latest
