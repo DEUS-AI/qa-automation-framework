@@ -960,6 +960,9 @@ class ActionMethods:
 
     @staticmethod
     def sendRequest(template, args):
+        res_headers = {}
+        res_body = {}
+        
         if "headers" in args.keys():
             res_headers = process_request_obj_inputs(args["headers"])
         
