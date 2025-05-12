@@ -452,8 +452,8 @@ def template_actions():
                 method: '{{ method }}',
                 url: `{{ url }}`,
                 auth: `{{ auth }}`,
-                {% if body is defined %}body: {{ body }},{% endif %}
-                {% if headers is defined %}headers: {{ headers }},{% endif %}
+                {% if body %}body: {{ body }},{% endif %}
+                headers: {{ headers }},
                 qs: {{ qs }},
                 log: {{ log }},
                 failOnStatusCode: {{ failOnStatusCode }},

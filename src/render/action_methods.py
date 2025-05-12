@@ -1,5 +1,3 @@
-import json
-
 class ActionMethods:
 
     # general actions
@@ -962,41 +960,29 @@ class ActionMethods:
 
     @staticmethod
     def sendRequest(template, args):
-        res_headers = {}
-        res_body = {}
-        
         if "headers" in args.keys():
             res_headers = process_request_obj_inputs(args["headers"])
         
         if "body" in args.keys():
-            res_body = json.dumps(process_request_obj_inputs(args["body"]))
+            res_body = process_request_obj_inputs(args["body"])
 
-        method = args["method"].upper()
-
-        render_args= {
-        "method": method,
-        "url": args["url"],
-        "alias": args["alias"],
-        "auth": args.get("auth", ""),
-        "headers": res_headers,
-        "qs": args.get("qs", {}),
-        "log": args.get("log", "true"),
-        "failOnStatusCode": args.get("failOnStatusCode", "true"),
-        "followRedirect": args.get("followRedirect", "true"),
-        "form": args.get("form", "false"),
-        "encoding": args.get("encoding", "utf8"),
-        "retryOnStatusCodeFailure": args.get("retryOnStatusCodeFailure", "false"),
-        "retryOnNetworkFailure": args.get("retryOnNetworkFailure", "true"),
-        "timeout": args.get("timeout", 10000)
-        }
-
-        # Only include body if the method is not GET
-        if method != "GET" :
-            render_args["body"] =res_body if args.get("body") else {},
-
-
-        return template.render(**render_args) + "\n"
-
+        return template.render(
+            method=args["method"],
+            url=args["url"],
+            alias=args["alias"],
+            auth=args["auth"] if args.get("auth") else "",
+            body=res_body if args.get("body") else {},
+            headers=res_headers if args.get("headers") else {},
+            qs=args["qs"] if args.get("qs") else {},
+            log=args["log"] if args.get("log") else "true",
+            failOnStatusCode=args["failOnStatusCode"] if args.get("failOnStatusCode") else "true",
+            followRedirect=args["followRedirect"] if args.get("followRedirect") else "true",
+            form=args["form"] if args.get("form") else "false",
+            encoding=args["encoding"] if args.get("encoding") else "utf8",
+            retryOnStatusCodeFailure=args["retryOnStatusCodeFailure"] if args.get("retryOnStatusCodeFailure") else "false",
+            retryOnNetworkFailure=args["retryOnNetworkFailure"] if args.get("retryOnNetworkFailure") else "true",
+            timeout=args["timeout"] if args.get("timeout") else 10000
+        ) + "\n"
 
     @staticmethod
     def sendRequestWithPayloadFromFile(template, args):
