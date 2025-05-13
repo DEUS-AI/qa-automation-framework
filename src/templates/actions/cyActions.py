@@ -452,7 +452,7 @@ def template_actions():
                 method: '{{ method }}',
                 url: `{{ url }}`,
                 auth: `{{ auth }}`,
-                body: {{ body }},
+                {% if body %} body: {{ body }},{% endif %}
                 headers: {{ headers }},
                 qs: {{ qs }},
                 log: {{ log }},
